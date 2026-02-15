@@ -135,7 +135,7 @@ Apply per-instance theme explicitly:
 ## Template Utility Bridge
 
 For advanced template helper APIs used by framework-style control authoring, see:
-- `51-template-content-and-func-template-patterns.md`
+- [`51-template-content-and-func-template-patterns.md`](51-template-content-and-func-template-patterns)
 
 Key bridge APIs:
 - `IControlTemplate`

@@ -181,11 +181,11 @@ Template utility contracts often used with this space:
 - `TemplateContent.Load(...)`
 
 API-index compatibility note:
-- `references/api-index-generated.md` includes `FuncTreeDataTemplate.ItemsSelector(object item)` and `TreeDataTemplate.ItemsSelector(object item)` signatures.
+- [`references/api-index-generated.md`](api-index-generated) includes `FuncTreeDataTemplate.ItemsSelector(object item)` and `TreeDataTemplate.ItemsSelector(object item)` signatures.
 - In app authoring, use `FuncTreeDataTemplate` selector delegates and `TreeDataTemplate.ItemsSource` as primary configuration paths.
 
 For end-to-end advanced coverage of these APIs, see:
-- `51-template-content-and-func-template-patterns.md`
+- [`51-template-content-and-func-template-patterns.md`](51-template-content-and-func-template-patterns)
 
 ## Best Practices
 

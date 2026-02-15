@@ -15,8 +15,8 @@ Clause. See `LICENSE` for the full terms.
 ## Skill Identity
 
 - Skill name: `xaml-csharp-development-skill-for-avalonia`
-- Primary definition: `SKILL.md`
-- Main reference index: `references/compendium.md`
+- Primary definition: [`SKILL.md`](SKILL)
+- Main reference index: [`references/compendium.md`](references/compendium)
 - Avalonia upstream repository: [AvaloniaUI/Avalonia](https://github.com/AvaloniaUI/Avalonia)
 
 ## Avalonia Version Coverage
@@ -55,13 +55,13 @@ When internals are mentioned, it is usually for diagnostics, constraints, or beh
 
 ## Repository Structure
 
-- `SKILL.md`
+- [`SKILL.md`](SKILL)
   - Skill entrypoint and execution rules
 - `references/`
   - Numbered, topic-focused reference documents
-- `references/compendium.md`
+- [`references/compendium.md`](references/compendium)
   - Top-level table of contents and task-oriented navigation
-- `references/api-index-generated.md`
+- [`references/api-index-generated.md`](references/api-index-generated)
   - Broad generated API signature index
 - `scripts/generate_api_index.py`
   - API index generator script
@@ -72,10 +72,10 @@ When internals are mentioned, it is usually for diagnostics, constraints, or beh
 
 ## How to Use the Skill
 
-1. Start from `SKILL.md`.
+1. Start from [`SKILL.md`](SKILL).
 2. Follow the workflow sections to load only the references needed for the current task.
-3. Use `references/compendium.md` for fast navigation.
-4. Use `references/api-index-generated.md` when exact public signatures are required.
+3. Use [`references/compendium.md`](references/compendium) for fast navigation.
+4. Use [`references/api-index-generated.md`](references/api-index-generated) when exact public signatures are required.
 
 ## XAML and API Coverage Notes
 
@@ -112,18 +112,18 @@ Recommended checks after regeneration:
 
 - Verify key startup/binding/platform signatures still match references.
 - Audit docs for master-only APIs introduced by mistake.
-- Update this README and `SKILL.md` if version coverage changes.
+- Update this README and [`SKILL.md`](SKILL) if version coverage changes.
 
 ## Maintenance Checklist for New Avalonia Release
 
 1. Switch target release tag (for example `11.3.x` -> `11.4.x`).
-2. Regenerate `references/api-index-generated.md` from the new tag.
+2. Regenerate [`references/api-index-generated.md`](references/api-index-generated) from the new tag.
 3. Diff critical APIs referenced by docs.
 4. Update affected reference files.
 5. Update:
-   - `README.md`
-   - `SKILL.md`
-   - `references/compendium.md`
+   - [`README.md`](README)
+   - [`SKILL.md`](SKILL)
+   - [`references/compendium.md`](references/compendium)
 
 ## Quality Bar
 

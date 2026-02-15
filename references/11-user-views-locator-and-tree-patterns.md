@@ -100,8 +100,8 @@ Visual tree APIs (`VisualExtensions`):
 Guidance:
 - Resource lookup and data-context scope are mainly logical-tree concerns.
 - Hit testing, transforms, and rendered structure are visual-tree concerns.
-- For deep visual-tree diagnostics, see `39-visual-tree-inspection-and-traversal.md`.
-- For deep logical-tree diagnostics, see `40-logical-tree-inspection-and-traversal.md`.
+- For deep visual-tree diagnostics, see [`39-visual-tree-inspection-and-traversal.md`](39-visual-tree-inspection-and-traversal).
+- For deep logical-tree diagnostics, see [`40-logical-tree-inspection-and-traversal.md`](40-logical-tree-inspection-and-traversal).
 
 ## Best Practices
 

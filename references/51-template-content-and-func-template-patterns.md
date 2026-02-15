@@ -184,7 +184,7 @@ XAML tree template path:
 
 API-index compatibility note:
 
-- `references/api-index-generated.md` includes `FuncTreeDataTemplate.ItemsSelector(object item)` and `TreeDataTemplate.ItemsSelector(object item)` signatures.
+- [`references/api-index-generated.md`](api-index-generated) includes `FuncTreeDataTemplate.ItemsSelector(object item)` and `TreeDataTemplate.ItemsSelector(object item)` signatures.
 - In practical `11.3.12` usage, author against `FuncTreeDataTemplate` constructor selector functions and `TreeDataTemplate.ItemsSource`.
 
 ## Runtime Template Content Loading (`TemplateContent`)

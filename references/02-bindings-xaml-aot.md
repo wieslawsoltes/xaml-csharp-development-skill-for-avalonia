@@ -21,13 +21,13 @@ Use runtime loaders only when the feature explicitly requires dynamic XAML (plug
 ## Binding Families
 
 For detailed converter guidance (single-value/multi-value, XAML resources, function-based converters, and binding wiring), see:
-- `45-value-converters-single-multi-and-binding-wiring.md`
+- [`45-value-converters-single-multi-and-binding-wiring.md`](45-value-converters-single-multi-and-binding-wiring)
 
 For advanced typed/untyped binding value semantics (`BindingValue<T>`, `BindingNotification`, `InstancedBinding`, `IndexerDescriptor`), see:
-- `46-binding-value-notification-and-instanced-binding-semantics.md`
+- [`46-binding-value-notification-and-instanced-binding-semantics.md`](46-binding-value-notification-and-instanced-binding-semantics)
 
 For `RelativeSource`, `StaticResource`, and name-scope resolution markup (`ResolveByNameExtension`), see:
-- `50-relative-static-resource-and-name-resolution-markup.md`
+- [`50-relative-static-resource-and-name-resolution-markup.md`](50-relative-static-resource-and-name-resolution-markup)
 
 Advanced binding-assignment contract:
 - `AssignBindingAttribute` marks members where a binding object should be assigned instead of initiating a live binding.

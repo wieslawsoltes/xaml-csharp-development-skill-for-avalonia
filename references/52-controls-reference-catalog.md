@@ -14,7 +14,7 @@ This catalog provides one reference document per public Avalonia control type.
 
 ## Entry Point
 
-- `controls/README.md`
+- [`controls/README.md`](controls/README)
 
 ## Generation
 

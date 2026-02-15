@@ -134,7 +134,7 @@ Useful APIs:
 - Large counts of complex paths can increase CPU/GPU cost.
 - Prefer reusable geometry resources over repeated parsing.
 
-For render-intensive scenarios, evaluate custom drawing (`references/14-custom-drawing-text-shapes-and-skia.md`).
+For render-intensive scenarios, evaluate custom drawing ([`references/14-custom-drawing-text-shapes-and-skia.md`](14-custom-drawing-text-shapes-and-skia)).
 
 ## Best Practices
 

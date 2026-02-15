@@ -33,7 +33,7 @@ Related platform-facing interfaces (mostly backend-level):
 - `IWindowingPlatform`
 
 For service access from top-level surfaces (`StorageProvider`, `Clipboard`, `Launcher`, `Screens`, platform handle), see:
-- `48-toplevel-window-and-runtime-services.md`
+- [`48-toplevel-window-and-runtime-services.md`](48-toplevel-window-and-runtime-services)
 
 ## `Window` Surface and Decoration APIs
 
