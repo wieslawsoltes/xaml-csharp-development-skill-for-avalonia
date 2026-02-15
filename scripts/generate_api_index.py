@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Generate an app-building public API signature index for Avalonia.
+"""Generate a public API signature index for Avalonia.
 
-The goal is pragmatic coverage of APIs used to build Avalonia apps (startup, lifetime,
-binding, styling, threading, platform bootstrap), not a full compiler-accurate API dump.
+The goal is broad public API coverage across the Avalonia product source tree, while
+still using a lightweight parser (not a full compiler-accurate symbol dump).
 """
 
 from __future__ import annotations
@@ -19,56 +19,13 @@ import tempfile
 from dataclasses import dataclass
 
 DEFAULT_PATTERNS = [
-    "src/Avalonia.Controls/AppBuilder.cs",
-    "src/Avalonia.Controls/Application.cs",
-    "src/Avalonia.Controls/ApplicationLifetimes/*.cs",
-    "src/Avalonia.Controls/TopLevel.cs",
-    "src/Avalonia.Controls/Window*.cs",
-    "src/Avalonia.Controls/UserControl.cs",
-    "src/Avalonia.Controls/ThemeVariantScope.cs",
-    "src/Avalonia.Controls/DesktopApplicationExtensions.cs",
-    "src/Avalonia.Controls/Templates/*.cs",
-    "src/Avalonia.Base/AvaloniaObject*.cs",
-    "src/Avalonia.Base/AvaloniaProperty*.cs",
-    "src/Avalonia.Base/StyledProperty.cs",
-    "src/Avalonia.Base/DirectProperty.cs",
-    "src/Avalonia.Base/AttachedProperty.cs",
-    "src/Avalonia.Base/Data/*.cs",
-    "src/Avalonia.Base/Threading/Dispatcher*.cs",
-    "src/Avalonia.Base/Styling/*.cs",
-    "src/Avalonia.Base/Controls/ResourceDictionary.cs",
-    "src/Avalonia.Base/Input/ICommandSource.cs",
-    "src/Avalonia.Base/Input/KeyGesture.cs",
-    "src/Avalonia.Base/Input/KeyBinding.cs",
-    "src/Avalonia.Base/Interactivity/*.cs",
-    "src/Markup/Avalonia.Markup/Data/Binding.cs",
-    "src/Markup/Avalonia.Markup.Xaml/AvaloniaXamlLoader.cs",
-    "src/Markup/Avalonia.Markup.Xaml.Loader/AvaloniaRuntimeXamlLoader.cs",
-    "src/Markup/Avalonia.Markup.Xaml/MarkupExtensions/*.cs",
-    "src/Markup/Avalonia.Markup.Xaml/Templates/*.cs",
-    "src/Markup/Avalonia.Markup.Xaml/Styling/*.cs",
-    "src/Avalonia.Desktop/AppBuilderDesktopExtensions.cs",
-    "src/Avalonia.Dialogs/ManagedFileDialogExtensions.cs",
-    "src/Skia/Avalonia.Skia/SkiaApplicationExtensions.cs",
-    "src/Skia/Avalonia.Skia/SkiaOptions.cs",
-    "src/HarfBuzz/Avalonia.HarfBuzz/HarfBuzzApplicationExtensions.cs",
-    "src/Avalonia.Fonts.Inter/AppBuilderExtension.cs",
-    "src/Windows/Avalonia.Win32/Win32Platform.cs",
-    "src/Windows/Avalonia.Win32/Win32PlatformOptions.cs",
-    "src/Avalonia.X11/X11Platform.cs",
-    "src/Avalonia.Native/AvaloniaNativePlatformExtensions.cs",
-    "src/Android/Avalonia.Android/AndroidPlatform.cs",
-    "src/iOS/Avalonia.iOS/Platform.cs",
-    "src/Browser/Avalonia.Browser/BrowserAppBuilder.cs",
-    "src/Linux/Avalonia.LinuxFramebuffer/LinuxFramebufferPlatform.cs",
-    "src/Linux/Avalonia.LinuxFramebuffer/LinuxFramebufferPlatformOptions.cs",
-    "src/Headless/Avalonia.Headless/AvaloniaHeadlessPlatform.cs",
-    "packages/Avalonia/Avalonia.props",
-    "packages/Avalonia/AvaloniaBuildTasks.props",
-    "packages/Avalonia/AvaloniaBuildTasks.targets",
-    "build/BuildTargets.targets",
-    "build/TrimmingEnable.props",
-    "src/tools/Avalonia.Generators/Avalonia.Generators.props",
+    # Public product source surface.
+    "src/**/*.cs",
+    # Build-facing configuration surface.
+    "packages/**/*.props",
+    "packages/**/*.targets",
+    "build/**/*.props",
+    "build/**/*.targets",
 ]
 
 TYPE_DECL_RE = re.compile(
@@ -272,7 +229,7 @@ def write_markdown(
         by_area.setdefault(area, []).append((rel, namespace, signatures))
 
     lines: list[str] = []
-    lines.append("# Avalonia App-Building API Index (Generated)")
+    lines.append("# Avalonia Public API Index (Generated)")
     lines.append("")
     lines.append(f"- Generated at (UTC): `{now}`")
     lines.append(f"- Repository: `{repo_label}`")
@@ -283,7 +240,7 @@ def write_markdown(
     lines.append("")
     lines.append("## Scope")
     lines.append("")
-    lines.append("This index intentionally targets app-construction APIs (startup, lifetime, XAML, binding, styling, threading, platform bootstrap, and build settings).")
+    lines.append("This index targets public APIs across Avalonia product source files and build configuration surfaces.")
     lines.append("")
     lines.append("## Regenerate")
     lines.append("")
@@ -327,7 +284,7 @@ def write_markdown(
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Generate app-facing Avalonia public API index markdown."
+        description="Generate broad Avalonia public API index markdown."
     )
     parser.add_argument(
         "--repo",

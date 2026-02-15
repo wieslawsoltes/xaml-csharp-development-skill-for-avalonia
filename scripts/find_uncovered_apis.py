@@ -13,6 +13,9 @@ import sys
 
 INDEX_SOURCE_RE = re.compile(r"^### `([^`]+)`\s*$")
 INDEX_ENTRY_RE = re.compile(r"^- `([^`]+)`\s*$")
+TOKEN_RE = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
+QUALIFIED_RE = re.compile(r"([A-Za-z_][A-Za-z0-9_]*)\s*\.\s*([A-Za-z_][A-Za-z0-9_]*)")
+METHOD_CALL_RE = re.compile(r"([A-Za-z_][A-Za-z0-9_]*)\s*(?:<[^>\n]+>)?\s*\(")
 TYPE_DECL_RE = re.compile(
     r"^public\s+(?:new\s+|unsafe\s+|abstract\s+|sealed\s+|static\s+|partial\s+|readonly\s+|ref\s+)*"
     r"(?:class|interface|struct|enum|record(?:\s+class|\s+struct)?)\s+([A-Za-z_][A-Za-z0-9_`.]*)"
@@ -32,6 +35,14 @@ class ApiEntry:
     kind: str
     symbol: str
     container: str | None = None
+
+
+@dataclass(frozen=True)
+class CorpusIndex:
+    corpus: str
+    tokens: frozenset[str]
+    qualified: frozenset[tuple[str, str]]
+    method_calls: frozenset[str]
 
 
 def normalize_ws(value: str) -> str:
@@ -217,56 +228,66 @@ def load_reference_docs(
     return docs, "\n\n".join(corpus_parts)
 
 
-def has_token(corpus: str, token: str) -> bool:
+def build_corpus_index(corpus: str) -> CorpusIndex:
+    tokens = frozenset(TOKEN_RE.findall(corpus))
+    qualified = frozenset((left, right) for left, right in QUALIFIED_RE.findall(corpus))
+    method_calls = frozenset(METHOD_CALL_RE.findall(corpus))
+    return CorpusIndex(
+        corpus=corpus,
+        tokens=tokens,
+        qualified=qualified,
+        method_calls=method_calls,
+    )
+
+
+def has_token(index: CorpusIndex, token: str) -> bool:
+    if " " not in token and token in index.tokens:
+        return True
+    if token not in index.corpus:
+        return False
     pattern = re.compile(rf"(?<![A-Za-z0-9_]){re.escape(token)}(?![A-Za-z0-9_])")
-    return bool(pattern.search(corpus))
+    return bool(pattern.search(index.corpus))
 
 
-def has_qualified(corpus: str, container: str, symbol: str) -> bool:
-    pattern = re.compile(
-        rf"(?<![A-Za-z0-9_]){re.escape(container)}\s*\.\s*{re.escape(symbol)}(?![A-Za-z0-9_])"
-    )
-    return bool(pattern.search(corpus))
+def has_qualified(index: CorpusIndex, container: str, symbol: str) -> bool:
+    return (container, symbol) in index.qualified
 
 
-def has_method_call(corpus: str, symbol: str) -> bool:
-    pattern = re.compile(
-        rf"(?<![A-Za-z0-9_]){re.escape(symbol)}\s*(?:<[^>\n]+>)?\s*\("
-    )
-    return bool(pattern.search(corpus))
+def has_method_call(index: CorpusIndex, symbol: str) -> bool:
+    return symbol in index.method_calls
 
 
-def is_covered(entry: ApiEntry, corpus: str) -> bool:
+def is_covered(entry: ApiEntry, index: CorpusIndex) -> bool:
     if entry.kind == "type":
-        if f"`{entry.symbol}`" in corpus:
+        if f"`{entry.symbol}`" in index.corpus:
             return True
-        return has_token(corpus, entry.symbol)
+        return has_token(index, entry.symbol)
 
     if entry.kind == "indexer":
-        return "this[" in corpus
+        return "this[" in index.corpus
 
     if entry.kind == "operator":
         text = f"operator {entry.symbol}"
-        if f"`{text}`" in corpus:
+        if f"`{text}`" in index.corpus:
             return True
-        return has_token(corpus, text)
+        return has_token(index, text)
 
     if entry.kind in {"method", "delegate"}:
-        if entry.container and has_qualified(corpus, entry.container, entry.symbol):
+        if entry.container and has_qualified(index, entry.container, entry.symbol):
             return True
-        if has_method_call(corpus, entry.symbol):
+        if has_method_call(index, entry.symbol):
             return True
-        return f"`{entry.symbol}`" in corpus
+        return f"`{entry.symbol}`" in index.corpus
 
-    if entry.container and has_qualified(corpus, entry.container, entry.symbol):
+    if entry.container and has_qualified(index, entry.container, entry.symbol):
         return True
 
-    if f"`{entry.symbol}`" in corpus:
+    if f"`{entry.symbol}`" in index.corpus:
         return True
 
     # Fallback for longer member names where plain-token matching is less noisy.
     if len(entry.symbol) >= 8 and entry.symbol[:1].isupper():
-        return has_token(corpus, entry.symbol)
+        return has_token(index, entry.symbol)
 
     return False
 
@@ -375,7 +396,8 @@ def main() -> int:
         exclude_patterns=exclude_patterns,
     )
 
-    uncovered = [entry for entry in entries if not is_covered(entry, corpus)]
+    corpus_index = build_corpus_index(corpus)
+    uncovered = [entry for entry in entries if not is_covered(entry, corpus_index)]
     report = build_report(entries, uncovered, docs, index_path, references_dir)
 
     if output_path is not None:
