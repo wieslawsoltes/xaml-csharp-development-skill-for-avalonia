@@ -19,7 +19,10 @@ Primary entry for the full reference set:
 
 2. Lock platform bootstrap and build pipeline before UI work.
 - Read `references/05-platforms-and-bootstrap.md`.
-- Read `references/29-platform-services-storage-clipboard-launcher-screens-and-dragdrop.md`.
+- Read `references/29-storage-provider-and-file-pickers.md`.
+- Read `references/31-clipboard-and-data-transfer.md`.
+- Read `references/32-launcher-and-external-open.md`.
+- Read `references/33-screens-and-display-awareness.md`.
 - Read `references/06-msbuild-aot-and-tooling.md`.
 - Set platform options and confirm XAML/compiled-binding configuration for AOT.
 
@@ -33,6 +36,7 @@ Primary entry for the full reference set:
 - Read `references/11-user-views-locator-and-tree-patterns.md`.
 - Read `references/18-input-system-and-routed-events.md`.
 - Read `references/19-focus-and-keyboard-navigation.md`.
+- Read `references/34-dragdrop-workflows.md`.
 - Keep routed-input handling thin and deterministic; prefer command/state dispatch.
 
 5. Author properties, styles, themes, resources, and assets as one system.

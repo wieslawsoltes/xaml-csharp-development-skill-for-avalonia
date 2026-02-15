@@ -33,16 +33,27 @@ Use this as the entry page for the full skill reference set.
 27. Testing stack (headless/render/UI): `26-testing-stack-headless-render-and-ui-tests.md`
 28. Diagnostics/profiling + devtools: `27-diagnostics-profiling-and-devtools.md`
 29. Custom themes (XAML + code-only): `28-custom-themes-xaml-and-code-only.md`
-30. Platform services + storage/clipboard/launcher/screens/dragdrop: `29-platform-services-storage-clipboard-launcher-screens-and-dragdrop.md`
+30. Storage provider + file pickers: `29-storage-provider-and-file-pickers.md`
 31. Layout measure/arrange + custom controls/panels: `30-layout-measure-arrange-and-custom-layout-controls.md`
-32. Generated API index: `api-index-generated.md`
+32. Clipboard + data transfer: `31-clipboard-and-data-transfer.md`
+33. Launcher + external open: `32-launcher-and-external-open.md`
+34. Screens + display awareness: `33-screens-and-display-awareness.md`
+35. DragDrop workflows: `34-dragdrop-workflows.md`
+36. Generated API index: `api-index-generated.md`
 
 ## Fast Navigation by Task
 
 - Startup/lifetime wiring:
   - `01-architecture-and-lifetimes.md`
   - `05-platforms-and-bootstrap.md`
-  - `29-platform-services-storage-clipboard-launcher-screens-and-dragdrop.md`
+  - `29-storage-provider-and-file-pickers.md`
+
+- Platform services and external integration:
+  - `29-storage-provider-and-file-pickers.md`
+  - `31-clipboard-and-data-transfer.md`
+  - `32-launcher-and-external-open.md`
+  - `33-screens-and-display-awareness.md`
+  - `34-dragdrop-workflows.md`
 
 - Binding correctness and AOT safety:
   - `02-bindings-xaml-aot.md`
@@ -65,6 +76,7 @@ Use this as the entry page for the full skill reference set.
   - `18-input-system-and-routed-events.md`
   - `19-focus-and-keyboard-navigation.md`
   - `24-commands-hotkeys-and-gestures.md`
+  - `34-dragdrop-workflows.md`
 
 - Large-data item controls:
   - `30-layout-measure-arrange-and-custom-layout-controls.md`
