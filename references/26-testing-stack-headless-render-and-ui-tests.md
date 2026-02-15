@@ -58,7 +58,6 @@ Headless test pipeline:
 
 ```csharp
 public static AppBuilder BuildAvaloniaApp() => AppBuilder.Configure<TestApp>()
-    .UseHarfBuzz()
     .UseSkia()
     .UseHeadless(new AvaloniaHeadlessPlatformOptions
     {

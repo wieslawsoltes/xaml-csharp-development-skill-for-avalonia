@@ -1,9 +1,10 @@
 # Avalonia App-Building API Index (Generated)
 
-- Generated at (UTC): `2026-02-14 21:51:00Z`
-- Repository: `Avalonia`
-- Files scanned: `202`
-- Captured public signatures: `1229`
+- Generated at (UTC): `2026-02-15 10:46:45Z`
+- Repository: `Avalonia@11.3.12`
+- Git ref: `11.3.12`
+- Files scanned: `197`
+- Captured public signatures: `1190`
 
 ## Scope
 
@@ -12,7 +13,7 @@ This index intentionally targets app-construction APIs (startup, lifetime, XAML,
 ## Regenerate
 
 ```bash
-python3 scripts/generate_api_index.py --repo <path-to-avalonia-repo> --output references/api-index-generated.md
+python3 scripts/generate_api_index.py --repo <path-to-avalonia-repo> --git-ref 11.3.12 --output references/api-index-generated.md
 ```
 
 ## Android Platform
@@ -35,6 +36,7 @@ python3 scripts/generate_api_index.py --repo <path-to-avalonia-repo> --output re
 - `public Action? WindowingSubsystemInitializer { get; private set; }`
 - `public string? WindowingSubsystemName { get; private set; }`
 - `public Action? RenderingSubsystemInitializer { get; private set; }`
+- `public Func<Type, IApplicationLifetime?>? LifetimeOverride { get; private set; }`
 - `public string? RenderingSubsystemName { get; private set; }`
 - `public Action<AppBuilder> AfterSetupCallback { get; private set; } = builder => { };`
 - `public Action<AppBuilder> AfterPlatformServicesSetupCallback { get; private set; } = builder => { };`
@@ -53,15 +55,15 @@ python3 scripts/generate_api_index.py --repo <path-to-avalonia-repo> --output re
 - `public AppBuilder UseStandardRuntimePlatformSubsystem() {`
 - `public AppBuilder With<T>(T options) {`
 - `public AppBuilder With<T>(Func<T> options) {`
-- `public AppBuilder WithDataAnnotationsValidation() {`
 - `public AppBuilder ConfigureFonts(Action<FontManager> action) {`
 
 ### `src/Avalonia.Controls/Application.cs`
-- `public class Application : AvaloniaObject, IDataContextProvider, IGlobalDataTemplates, IGlobalStyles, IThemeVariantHost, IResourceHost, IOptionalFeatureProvider`
+- `public class Application : AvaloniaObject, IDataContextProvider, IGlobalDataTemplates, IGlobalStyles, IThemeVariantHost, IResourceHost2, IApplicationPlatformEvents, IOptionalFeatureProvider`
 - `public static readonly StyledProperty<object?> DataContextProperty = StyledElement.DataContextProperty.AddOwner<Application>();`
 - `public static readonly StyledProperty<ThemeVariant> ActualThemeVariantProperty = ThemeVariantScope.ActualThemeVariantProperty.AddOwner<Application>();`
 - `public static readonly StyledProperty<ThemeVariant?> RequestedThemeVariantProperty = ThemeVariantScope.RequestedThemeVariantProperty.AddOwner<Application>();`
 - `public event EventHandler<ResourcesChangedEventArgs>? ResourcesChanged;`
+- `public event EventHandler<UrlOpenedEventArgs>? UrlsOpened;`
 - `public event EventHandler? ActualThemeVariantChanged;`
 - `public Application() {`
 - `public object? DataContext {`
@@ -113,6 +115,8 @@ python3 scripts/generate_api_index.py --repo <path-to-avalonia-repo> --output re
 - `public int Start(string[] args) {`
 - `public int Start() {`
 - `public void Dispose() {`
+- `public class ClassicDesktopStyleApplicationLifetimeOptions`
+- `public bool ProcessUrlActivationCommandLine { get; set; }`
 - `public static class ClassicDesktopStyleApplicationLifetimeExtensions`
 - `public static AppBuilder SetupWithClassicDesktopLifetime(this AppBuilder builder, string[] args, Action<IClassicDesktopStyleApplicationLifetime>? lifetimeBuilder = null) {`
 - `public static int StartWithClassicDesktopLifetime( this AppBuilder builder, string[] args, Action<IClassicDesktopStyleApplicationLifetime>? lifetimeBuilder = null) {`
@@ -131,12 +135,10 @@ python3 scripts/generate_api_index.py --repo <path-to-avalonia-repo> --output re
 
 ### `src/Avalonia.Controls/ApplicationLifetimes/IActivatableApplicationLifetime.cs`
 - Namespace: `Avalonia.Controls.ApplicationLifetimes`
+- `public interface IActivatableApplicationLifetime : IActivatableLifetime {`
 - `public interface IActivatableLifetime`
 - `public bool TryLeaveBackground();`
 - `public bool TryEnterBackground();`
-
-### `src/Avalonia.Controls/ApplicationLifetimes/IActivityApplicationLifetime.cs`
-- `public interface IActivityApplicationLifetime : IApplicationLifetime`
 
 ### `src/Avalonia.Controls/ApplicationLifetimes/IApplicationLifetime.cs`
 - `public interface IApplicationLifetime`
@@ -225,7 +227,7 @@ python3 scripts/generate_api_index.py --repo <path-to-avalonia-repo> --output re
 - `public class FuncTreeDataTemplate : FuncDataTemplate, ITreeDataTemplate`
 - `public FuncTreeDataTemplate( Type type, Func<object?, INameScope, Control> build, Func<object?, IEnumerable> itemsSelector) : this(o => IsInstance(o, type), build, itemsSelector)`
 - `public FuncTreeDataTemplate( Func<object?, bool> match, Func<object?, INameScope, Control?> build, Func<object?, IEnumerable> itemsSelector) : base(match, build) {`
-- `public IDisposable BindChildren(AvaloniaObject target, AvaloniaProperty targetProperty, object item) {`
+- `public InstancedBinding ItemsSelector(object item) {`
 
 ### `src/Avalonia.Controls/Templates/FuncTreeDataTemplate`1.cs`
 - `public class FuncTreeDataTemplate<T> : FuncTreeDataTemplate`
@@ -306,7 +308,7 @@ python3 scripts/generate_api_index.py --repo <path-to-avalonia-repo> --output re
 - `public ILauncher Launcher => PlatformImpl?.TryGetFeature<ILauncher>() ?? new NoopLauncher();`
 - `public Screens? Screens => _screens ??=`
 - `public IClipboard? Clipboard => PlatformImpl?.TryGetFeature<IClipboard>();`
-- `public IFocusManager? FocusManager => _focusManager ??= new FocusManager(this);`
+- `public IFocusManager? FocusManager => AvaloniaLocator.Current.GetService<IFocusManager>();`
 - `public IPlatformSettings? PlatformSettings => AvaloniaLocator.Current.GetService<IPlatformSettings>();`
 - `public static TopLevel? GetTopLevel(Visual? visual) {`
 - `public async Task<IDisposable> RequestPlatformInhibition(PlatformInhibitionType type, string reason) {`
@@ -374,7 +376,7 @@ python3 scripts/generate_api_index.py --repo <path-to-avalonia-repo> --output re
 - `public void Show(Window owner) {`
 - `public Task ShowDialog(Window owner) {`
 - `public Task<TResult> ShowDialog<TResult>(Window owner) => ShowCore<TResult>(owner, true)!;`
-- `public static void SortWindowsByZOrder(Span<Window> windows) {`
+- `public static void SortWindowsByZOrder(Window[] windows) {`
 
 ### `src/Avalonia.Controls/WindowBase.cs`
 - `public class WindowBase : TopLevel`
@@ -506,7 +508,7 @@ python3 scripts/generate_api_index.py --repo <path-to-avalonia-repo> --output re
 - `public bool? EnableMultiTouch { get; set; } = true;`
 - `public bool? UseRetainedFramebuffer { get; set; }`
 - `public bool UseGLibMainLoop { get; set; }`
-- `public Action<Exception>? ExternalGLibMainLoopExceptionLogger { get; set; }`
+- `public Action<Exception>? ExterinalGLibMainLoopExceptionLogger { get; set; }`
 - `public X11PlatformOptions() {`
 - `public static class AvaloniaX11PlatformExtensions`
 - `public static AppBuilder UseX11(this AppBuilder builder) {`
@@ -518,6 +520,8 @@ python3 scripts/generate_api_index.py --repo <path-to-avalonia-repo> --output re
 - `public static class ManagedFileDialogExtensions`
 - `public static AppBuilder UseManagedSystemDialogs(this AppBuilder builder) {`
 - `public static AppBuilder UseManagedSystemDialogs<TWindow>(this AppBuilder builder) where TWindow : Window, new() {`
+- `public static Task<string[]> ShowManagedAsync(this OpenFileDialog dialog, Window parent, ManagedFileDialogOptions? options = null) => ShowManagedAsync<Window>(dialog, parent, options);`
+- `public static async Task<string[]> ShowManagedAsync<TWindow>(this OpenFileDialog dialog, Window parent, ManagedFileDialogOptions? options = null) where TWindow : Window, new() {`
 
 ## Property, Data, Styling, Threading
 
@@ -530,7 +534,7 @@ python3 scripts/generate_api_index.py --repo <path-to-avalonia-repo> --output re
 - `public AvaloniaObject() {`
 - `public event EventHandler<AvaloniaPropertyChangedEventArgs>? PropertyChanged {`
 - `public object? this[AvaloniaProperty property] {`
-- `public BindingBase this[IndexerDescriptor binding] {`
+- `public IBinding this[IndexerDescriptor binding] {`
 - `public bool CheckAccess() => Dispatcher.UIThread.CheckAccess();`
 - `public void VerifyAccess() => Dispatcher.UIThread.VerifyAccess();`
 - `public void ClearValue(AvaloniaProperty property) {`
@@ -550,7 +554,7 @@ python3 scripts/generate_api_index.py --repo <path-to-avalonia-repo> --output re
 - `public void SetValue<T>(DirectPropertyBase<T> property, T value) {`
 - `public void SetCurrentValue(AvaloniaProperty property, object? value) =>`
 - `public void SetCurrentValue<T>(StyledProperty<T> property, T value) {`
-- `public BindingExpressionBase Bind(AvaloniaProperty property, BindingBase binding) {`
+- `public BindingExpressionBase Bind(AvaloniaProperty property, IBinding binding) {`
 - `public IDisposable Bind( AvaloniaProperty property, IObservable<object?> source, BindingPriority priority = BindingPriority.LocalValue) => property.RouteBind(this, source, priority);`
 - `public IDisposable Bind<T>( StyledProperty<T> property, IObservable<object?> source, BindingPriority priority = BindingPriority.LocalValue) {`
 - `public IDisposable Bind<T>( StyledProperty<T> property, IObservable<T> source, BindingPriority priority = BindingPriority.LocalValue) {`
@@ -562,7 +566,7 @@ python3 scripts/generate_api_index.py --repo <path-to-avalonia-repo> --output re
 
 ### `src/Avalonia.Base/AvaloniaObjectExtensions.cs`
 - `public static class AvaloniaObjectExtensions`
-- `public static BindingBase ToBinding<T>(this IObservable<T> source) {`
+- `public static IBinding ToBinding<T>(this IObservable<T> source) {`
 - `public static IObservable<object?> GetObservable(this AvaloniaObject o, AvaloniaProperty property) {`
 - `public static IObservable<T> GetObservable<T>(this AvaloniaObject o, AvaloniaProperty<T> property) {`
 - `public static IObservable<TResult> GetObservable<TSource, TResult>(this AvaloniaObject o, AvaloniaProperty<TSource> property, Func<TSource, TResult> converter) {`
@@ -574,6 +578,7 @@ python3 scripts/generate_api_index.py --repo <path-to-avalonia-repo> --output re
 - `public static IObservable<AvaloniaPropertyChangedEventArgs> GetPropertyChangedObservable( this AvaloniaObject o, AvaloniaProperty property) {`
 - `public static IDisposable Bind<T>( this AvaloniaObject target, AvaloniaProperty<T> property, IObservable<BindingValue<T>> source, BindingPriority priority = BindingPriority.LocalValue) {`
 - `public static IDisposable Bind<T>( this AvaloniaObject target, AvaloniaProperty<T> property, IObservable<T> source, BindingPriority priority = BindingPriority.LocalValue) {`
+- `public static IDisposable Bind( this AvaloniaObject target, AvaloniaProperty property, IBinding binding, object? anchor = null) {`
 - `public static T GetValue<T>(this AvaloniaObject target, AvaloniaProperty<T> property) {`
 - `public static object? GetBaseValue( this AvaloniaObject target, AvaloniaProperty property) {`
 - `public static Optional<T> GetBaseValue<T>( this AvaloniaObject target, AvaloniaProperty<T> property) {`
@@ -693,10 +698,6 @@ python3 scripts/generate_api_index.py --repo <path-to-avalonia-repo> --output re
 ### `src/Avalonia.Base/Data/AssignBindingAttribute.cs`
 - `public sealed class AssignBindingAttribute : Attribute`
 
-### `src/Avalonia.Base/Data/BindingBase.cs`
-- Namespace: `Avalonia.Data`
-- `public abstract class BindingBase`
-
 ### `src/Avalonia.Base/Data/BindingChainException.cs`
 - `public class BindingChainException : Exception`
 - `public BindingChainException() {`
@@ -744,6 +745,8 @@ python3 scripts/generate_api_index.py --repo <path-to-avalonia-repo> --output re
 ### `src/Avalonia.Base/Data/BindingOperations.cs`
 - `public static class BindingOperations`
 - `public static readonly object DoNothing = new DoNothingType();`
+- `public static IDisposable Apply( AvaloniaObject target, AvaloniaProperty property, InstancedBinding binding) {`
+- `public static IDisposable Apply( AvaloniaObject target, AvaloniaProperty property, InstancedBinding binding, object? anchor) {`
 - `public static BindingExpressionBase? GetBindingExpressionBase(AvaloniaObject target, AvaloniaProperty property) {`
 - `public sealed class DoNothingType`
 - `public override string ToString() => "(do nothing)";`
@@ -781,48 +784,6 @@ python3 scripts/generate_api_index.py --repo <path-to-avalonia-repo> --output re
 - `public static BindingValue<T> DataValidationError(Exception e, T fallbackValue) {`
 - `public static BindingValue<T> DataValidationError(Exception e, Optional<T> fallbackValue) {`
 
-### `src/Avalonia.Base/Data/CompiledBinding.cs`
-- Namespace: `Avalonia.Data`
-- `public class CompiledBinding : BindingBase`
-- `public CompiledBinding() { }`
-- `public CompiledBinding(CompiledBindingPath path) => Path = path;`
-- `public static CompiledBinding Create<TIn, TOut>( Expression<Func<TIn, TOut>> expression, object? source = null, IValueConverter? converter = null, BindingMode mode = BindingMode.Default, BindingPriority priority = BindingPriority.LocalValue, CultureInfo? converterCulture = null, object? converterParameter = null, object? fallbackValue = null, string? stringFormat = null, object? targetNullValue = null, UpdateSourceTrigger updateSourceTrigger = UpdateSourceTrigger.Default, int delay = 0) {`
-- `public int Delay { get; set; }`
-- `public IValueConverter? Converter { get; set; }`
-- `public CultureInfo? ConverterCulture { get; set; }`
-- `public object? ConverterParameter { get; set; }`
-- `public object? FallbackValue { get; set; } = AvaloniaProperty.UnsetValue;`
-- `public BindingMode Mode { get; set; }`
-- `public CompiledBindingPath? Path { get; set; }`
-- `public BindingPriority Priority { get; set; }`
-- `public object? Source { get; set; } = AvaloniaProperty.UnsetValue;`
-- `public string? StringFormat { get; set; }`
-- `public object? TargetNullValue { get; set; } = AvaloniaProperty.UnsetValue;`
-- `public UpdateSourceTrigger UpdateSourceTrigger { get; set; }`
-
-### `src/Avalonia.Base/Data/CompiledBindingPath.cs`
-- `public class CompiledBindingPath`
-- `public CompiledBindingPath() => _elements = Array.Empty<ICompiledBindingPathElement>();`
-- `public override string ToString() => string.Concat((IEnumerable<ICompiledBindingPathElement>)_elements);`
-- `public class CompiledBindingPathBuilder`
-- `public CompiledBindingPathBuilder() {`
-- `public CompiledBindingPathBuilder Not() {`
-- `public CompiledBindingPathBuilder Property(IPropertyInfo info, Func<WeakReference<object?>, IPropertyInfo, IPropertyAccessor> accessorFactory) {`
-- `public CompiledBindingPathBuilder Property( IPropertyInfo info, Func<WeakReference<object?>, IPropertyInfo, IPropertyAccessor> accessorFactory, bool acceptsNull) {`
-- `public CompiledBindingPathBuilder Method(RuntimeMethodHandle handle, RuntimeTypeHandle delegateType) {`
-- `public CompiledBindingPathBuilder Method( RuntimeMethodHandle handle, RuntimeTypeHandle delegateType, bool acceptsNull) {`
-- `public CompiledBindingPathBuilder Command(string methodName, Action<object, object?> executeHelper, Func<object, object?, bool>? canExecuteHelper, string[]? dependsOnProperties) {`
-- `public CompiledBindingPathBuilder StreamTask<T>() {`
-- `public CompiledBindingPathBuilder StreamObservable<T>() {`
-- `public CompiledBindingPathBuilder Self() {`
-- `public CompiledBindingPathBuilder Ancestor(Type ancestorType, int level) {`
-- `public CompiledBindingPathBuilder VisualAncestor(Type ancestorType, int level) {`
-- `public CompiledBindingPathBuilder ElementName(INameScope nameScope, string name) {`
-- `public CompiledBindingPathBuilder ArrayElement(int[] indices, Type elementType) {`
-- `public CompiledBindingPathBuilder TypeCast<T>() {`
-- `public CompiledBindingPathBuilder TemplatedParent() {`
-- `public CompiledBindingPath Build() => new CompiledBindingPath(_elements.ToArray());`
-
 ### `src/Avalonia.Base/Data/CultureInfoIetfLanguageTagConverter.cs`
 - Namespace: `Avalonia.Data`
 - `public class CultureInfoIetfLanguageTagConverter : TypeConverter`
@@ -833,6 +794,9 @@ python3 scripts/generate_api_index.py --repo <path-to-avalonia-repo> --output re
 - `public class DataValidationException : Exception`
 - `public DataValidationException(object? errorData) : base(errorData?.ToString()) {`
 - `public object? ErrorData { get; }`
+
+### `src/Avalonia.Base/Data/IBinding.cs`
+- `public interface IBinding`
 
 ### `src/Avalonia.Base/Data/IndexerDescriptor.cs`
 - `public class IndexerDescriptor : IObservable<object?>, IDescription`
@@ -848,19 +812,18 @@ python3 scripts/generate_api_index.py --repo <path-to-avalonia-repo> --output re
 - `public IndexerDescriptor WithPriority(BindingPriority priority) {`
 - `public IDisposable Subscribe(IObserver<object?> observer) {`
 
-### `src/Avalonia.Base/Data/MultiBinding.cs`
-- `public sealed class MultiBinding : BindingBase`
-- `public IList<BindingBase> Bindings { get; set; } = new List<BindingBase>();`
-- `public IMultiValueConverter? Converter { get; set; }`
-- `public CultureInfo? ConverterCulture { get; set; }`
-- `public object? ConverterParameter { get; set; }`
-- `public object FallbackValue { get; set; }`
-- `public object TargetNullValue { get; set; }`
-- `public BindingMode Mode { get; set; } = BindingMode.OneWay;`
-- `public BindingPriority Priority { get; set; }`
-- `public RelativeSource? RelativeSource { get; set; }`
-- `public string? StringFormat { get; set; }`
-- `public MultiBinding() {`
+### `src/Avalonia.Base/Data/InstancedBinding.cs`
+- `public sealed class InstancedBinding`
+- `public BindingMode Mode { get; }`
+- `public BindingPriority Priority { get; }`
+- `public IObservable<object?> Source => _observable ??= _expression!.ToObservable(_target);`
+- `public IObservable<object?> Observable => Source;`
+- `public static InstancedBinding OneTime( object value, BindingPriority priority = BindingPriority.LocalValue) {`
+- `public static InstancedBinding OneTime( IObservable<object?> observable, BindingPriority priority = BindingPriority.LocalValue) {`
+- `public static InstancedBinding OneWay( IObservable<object?> observable, BindingPriority priority = BindingPriority.LocalValue) {`
+- `public static InstancedBinding OneWayToSource( IObserver<object?> observer, BindingPriority priority = BindingPriority.LocalValue) {`
+- `public static InstancedBinding TwoWay( IObservable<object?> observable, IObserver<object?> observer, BindingPriority priority = BindingPriority.LocalValue) {`
+- `public InstancedBinding WithPriority(BindingPriority priority) {`
 
 ### `src/Avalonia.Base/Data/Optional.cs`
 - `public readonly struct Optional<T> : IEquatable<Optional<T>>`
@@ -883,47 +846,22 @@ python3 scripts/generate_api_index.py --repo <path-to-avalonia-repo> --output re
 - `public static class OptionalExtensions`
 - `public static Optional<T> Cast<T>(this Optional<object?> value) {`
 
-### `src/Avalonia.Base/Data/ReflectionBinding.cs`
-- `public class ReflectionBinding : BindingBase`
-- `public ReflectionBinding() {`
-- `public ReflectionBinding(string path) {`
-- `public int Delay { get; set; }`
-- `public IValueConverter? Converter { get; set; }`
-- `public CultureInfo? ConverterCulture { get; set; }`
-- `public object? ConverterParameter { get; set; }`
-- `public string? ElementName { get; set; }`
-- `public object? FallbackValue { get; set; } = AvaloniaProperty.UnsetValue;`
-- `public BindingMode Mode { get; set; }`
-- `public string Path { get; set; } = "";`
-- `public BindingPriority Priority { get; set; }`
-- `public RelativeSource? RelativeSource { get; set; }`
-- `public object? Source { get; set; } = AvaloniaProperty.UnsetValue;`
-- `public string? StringFormat { get; set; }`
-- `public object? TargetNullValue { get; set; } = AvaloniaProperty.UnsetValue;`
-- `public UpdateSourceTrigger UpdateSourceTrigger { get; set; }`
-- `public Func<string?, string, Type>? TypeResolver { get; set; }`
-
-### `src/Avalonia.Base/Data/RelativeSource.cs`
-- `public enum RelativeSourceMode`
-- `public enum TreeType`
-- `public class RelativeSource`
-- `public RelativeSource() {`
-- `public RelativeSource(RelativeSourceMode mode) {`
-- `public int AncestorLevel {`
-- `public Type? AncestorType { get; set; }`
-- `public RelativeSourceMode Mode { get; set; }`
-- `public TreeType Tree { get; set; } = TreeType.Visual;`
+### `src/Avalonia.Base/Data/TemplateBinding.Observable.cs`
+- `public partial class TemplateBinding : IAvaloniaSubject<object?>`
+- `public IDisposable Subscribe(IObserver<object?> observer) {`
 
 ### `src/Avalonia.Base/Data/TemplateBinding.cs`
-- `public sealed partial class TemplateBinding : BindingBase`
-- `public TemplateBinding() {`
-- `public TemplateBinding([InheritDataTypeFrom(InheritDataTypeFromScopeKind.ControlTemplate)] AvaloniaProperty property) {`
+- `public partial class TemplateBinding : UntypedBindingExpressionBase,`
+- `public TemplateBinding() : base(BindingPriority.Template) {`
+- `public TemplateBinding([InheritDataTypeFrom(InheritDataTypeFromScopeKind.ControlTemplate)] AvaloniaProperty property) : base(BindingPriority.Template) {`
 - `public IValueConverter? Converter { get; set; }`
 - `public CultureInfo? ConverterCulture { get; set; }`
 - `public object? ConverterParameter { get; set; }`
-- `public BindingMode Mode { get; set; }`
+- `public new BindingMode Mode {`
 - `public AvaloniaProperty? Property { get; set; }`
-- `public BindingBase ProvideValue() => this;`
+- `public override string Description => "TemplateBinding: " + Property;`
+- `public IBinding ProvideValue() => this;`
+- `public InstancedBinding? Initiate( AvaloniaObject target, AvaloniaProperty? targetProperty, object? anchor = null, bool enableDataValidation = false) {`
 
 ### `src/Avalonia.Base/Data/UpdateSourceTrigger.cs`
 - `public enum UpdateSourceTrigger`
@@ -1089,6 +1027,9 @@ python3 scripts/generate_api_index.py --repo <path-to-avalonia-repo> --output re
 ### `src/Avalonia.Base/Styling/IStyleHost.cs`
 - `public interface IStyleHost`
 
+### `src/Avalonia.Base/Styling/IStyleable.cs`
+- `public interface IStyleable : INamed`
+
 ### `src/Avalonia.Base/Styling/ITemplate.cs`
 - `public interface ITemplate`
 
@@ -1141,7 +1082,7 @@ python3 scripts/generate_api_index.py --repo <path-to-avalonia-repo> --output re
 - `public override string ToString() => Selector?.ToString(this) ?? "Style";`
 
 ### `src/Avalonia.Base/Styling/StyleBase.cs`
-- `public abstract class StyleBase : AvaloniaObject, IStyle, IResourceProvider, IAddChild`
+- `public abstract class StyleBase : AvaloniaObject, IStyle, IResourceProvider`
 - `public IList<IStyle> Children => _children ??= new(this);`
 - `public IResourceHost? Owner {`
 - `public IStyle? Parent { get; private set; }`
@@ -1241,18 +1182,14 @@ python3 scripts/generate_api_index.py --repo <path-to-avalonia-repo> --output re
 - `public DispatcherOperation<TResult> InvokeAsync<TResult>(Func<TResult> callback) {`
 - `public DispatcherOperation<TResult> InvokeAsync<TResult>(Func<TResult> callback, DispatcherPriority priority) {`
 - `public DispatcherOperation<TResult> InvokeAsync<TResult>(Func<TResult> callback, DispatcherPriority priority, CancellationToken cancellationToken) {`
+- `public void Post(Action action, DispatcherPriority priority = default) {`
 - `public Task InvokeAsync(Func<Task> callback) => InvokeAsync(callback, DispatcherPriority.Default);`
 - `public Task InvokeAsync(Func<Task> callback, DispatcherPriority priority) {`
 - `public Task<TResult> InvokeAsync<TResult>(Func<Task<TResult>> action) =>`
 - `public Task<TResult> InvokeAsync<TResult>(Func<Task<TResult>> action, DispatcherPriority priority) {`
-- `public void Post(Action action, DispatcherPriority priority = default) {`
 - `public void Post(SendOrPostCallback action, object? arg, DispatcherPriority priority = default) {`
 - `public DispatcherPriorityAwaitable AwaitWithPriority(Task task, DispatcherPriority priority) =>`
 - `public DispatcherPriorityAwaitable<T> AwaitWithPriority<T>(Task<T> task, DispatcherPriority priority) =>`
-- `public DispatcherPriorityAwaitable Resume() =>`
-- `public DispatcherPriorityAwaitable Resume(DispatcherPriority priority) {`
-- `public static DispatcherPriorityAwaitable Yield() =>`
-- `public static DispatcherPriorityAwaitable Yield(DispatcherPriority priority) {`
 
 ### `src/Avalonia.Base/Threading/Dispatcher.MainLoop.cs`
 - Namespace: `Avalonia.Threading`
@@ -1361,18 +1298,14 @@ python3 scripts/generate_api_index.py --repo <path-to-avalonia-repo> --output re
 
 ### `src/Avalonia.Base/Threading/DispatcherPriorityAwaitable.cs`
 - Namespace: `Avalonia.Threading`
-- `public struct DispatcherPriorityAwaitable`
-- `public DispatcherPriorityAwaiter GetAwaiter() => new(_dispatcher, _task, _priority);`
-- `public struct DispatcherPriorityAwaiter : INotifyCompletion`
-- `public void OnCompleted(Action continuation) {`
-- `public bool IsCompleted => false;`
-- `public void GetResult() {`
-- `public struct DispatcherPriorityAwaitable<T>`
-- `public DispatcherPriorityAwaiter<T> GetAwaiter() => new(_dispatcher, _task, _priority);`
-- `public struct DispatcherPriorityAwaiter<T> : INotifyCompletion`
-- `public void OnCompleted(Action continuation) {`
-- `public bool IsCompleted => false;`
-- `public void GetResult() => _task.GetAwaiter().GetResult();`
+- `public class DispatcherPriorityAwaitable : INotifyCompletion`
+- `public void OnCompleted(Action continuation) =>`
+- `public bool IsCompleted => Task.IsCompleted;`
+- `public void GetResult() => Task.GetAwaiter().GetResult();`
+- `public DispatcherPriorityAwaitable GetAwaiter() => this;`
+- `public sealed class DispatcherPriorityAwaitable<T> : DispatcherPriorityAwaitable`
+- `public new T GetResult() => ((Task<T>)Task).GetAwaiter().GetResult();`
+- `public new DispatcherPriorityAwaitable<T> GetAwaiter() => this;`
 
 ### `src/Avalonia.Base/Threading/DispatcherTimer.cs`
 - Namespace: `Avalonia.Threading`
@@ -1407,10 +1340,6 @@ python3 scripts/generate_api_index.py --repo <path-to-avalonia-repo> --output re
 ### `src/Avalonia.Fonts.Inter/AppBuilderExtension.cs`
 - `public static class AppBuilderExtension`
 - `public static AppBuilder WithInterFont(this AppBuilder appBuilder) {`
-
-### `src/HarfBuzz/Avalonia.HarfBuzz/HarfBuzzApplicationExtensions.cs`
-- `public static class HarfBuzzApplicationExtensions`
-- `public static AppBuilder UseHarfBuzz(this AppBuilder builder) {`
 
 ### `src/Skia/Avalonia.Skia/SkiaApplicationExtensions.cs`
 - `public static class SkiaApplicationExtensions`
@@ -1462,18 +1391,21 @@ python3 scripts/generate_api_index.py --repo <path-to-avalonia-repo> --output re
 - `public static object Load(IServiceProvider? sp, Uri uri, Uri? baseUri = null) {`
 
 ### `src/Markup/Avalonia.Markup.Xaml/MarkupExtensions/CompiledBindingExtension.cs`
-- `public sealed class CompiledBindingExtension : CompiledBinding`
+- `public class CompiledBindingExtension : BindingBase`
 - `public CompiledBindingExtension() {`
 - `public CompiledBindingExtension(CompiledBindingPath path) {`
-- `public CompiledBinding ProvideValue(IServiceProvider? provider) {`
+- `public CompiledBindingExtension ProvideValue(IServiceProvider provider) {`
+- `public CompiledBindingPath Path { get; set; }`
+- `public object? Source { get; set; } = AvaloniaProperty.UnsetValue;`
 - `public Type? DataType { get; set; }`
+- `public override InstancedBinding? Initiate( AvaloniaObject target, AvaloniaProperty? targetProperty, object? anchor = null, bool enableDataValidation = false) {`
 
 ### `src/Markup/Avalonia.Markup.Xaml/MarkupExtensions/DynamicResourceExtension.cs`
-- `public sealed class DynamicResourceExtension : BindingBase`
+- `public class DynamicResourceExtension : IBinding2`
 - `public DynamicResourceExtension() {`
 - `public DynamicResourceExtension(object resourceKey) {`
 - `public object? ResourceKey { get; set; }`
-- `public BindingBase ProvideValue(IServiceProvider serviceProvider) {`
+- `public IBinding ProvideValue(IServiceProvider serviceProvider) {`
 
 ### `src/Markup/Avalonia.Markup.Xaml/MarkupExtensions/On.cs`
 - Namespace: `Avalonia.Markup.Xaml.MarkupExtensions`
@@ -1520,10 +1452,24 @@ python3 scripts/generate_api_index.py --repo <path-to-avalonia-repo> --output re
 - `public object ProvideValue() { return this; }`
 
 ### `src/Markup/Avalonia.Markup.Xaml/MarkupExtensions/ReflectionBindingExtension.cs`
-- `public sealed class ReflectionBindingExtension : ReflectionBinding`
-- `public ReflectionBindingExtension() { }`
-- `public ReflectionBindingExtension(string path) : base(path) { }`
-- `public ReflectionBinding ProvideValue(IServiceProvider serviceProvider) {`
+- `public class ReflectionBindingExtension`
+- `public ReflectionBindingExtension() {`
+- `public ReflectionBindingExtension(string path) {`
+- `public Binding ProvideValue(IServiceProvider serviceProvider) {`
+- `public int Delay { get; set; }`
+- `public IValueConverter? Converter { get; set; }`
+- `public CultureInfo? ConverterCulture { get; set; }`
+- `public object? ConverterParameter { get; set; }`
+- `public string? ElementName { get; set; }`
+- `public object? FallbackValue { get; set; } = AvaloniaProperty.UnsetValue;`
+- `public BindingMode Mode { get; set; }`
+- `public string Path { get; set; } = "";`
+- `public BindingPriority Priority { get; set; } = BindingPriority.LocalValue;`
+- `public object? Source { get; set; } = AvaloniaProperty.UnsetValue;`
+- `public string? StringFormat { get; set; }`
+- `public RelativeSource? RelativeSource { get; set; }`
+- `public object? TargetNullValue { get; set; } = AvaloniaProperty.UnsetValue;`
+- `public UpdateSourceTrigger UpdateSourceTrigger { get; set; }`
 
 ### `src/Markup/Avalonia.Markup.Xaml/MarkupExtensions/RelativeSourceExtension.cs`
 - `public class RelativeSourceExtension`
@@ -1612,14 +1558,19 @@ python3 scripts/generate_api_index.py --repo <path-to-avalonia-repo> --output re
 - `public object? Content { get; set; }`
 - `public BindingBase? ItemsSource { get; set; }`
 - `public bool Match(object? data) {`
-- `public IDisposable BindChildren(AvaloniaObject target, AvaloniaProperty targetProperty, object item) {`
+- `public InstancedBinding? ItemsSelector(object item) {`
 - `public Control? Build(object? data) {`
 
 ### `src/Markup/Avalonia.Markup/Data/Binding.cs`
-- Namespace: `Avalonia.Data`
-- `public class Binding : ReflectionBinding`
-- `public Binding() { }`
-- `public Binding(string path) : base(path) { }`
+- `public class Binding : BindingBase`
+- `public Binding() {`
+- `public Binding(string path, BindingMode mode = BindingMode.Default) : base(mode) {`
+- `public string? ElementName { get; set; }`
+- `public RelativeSource? RelativeSource { get; set; }`
+- `public object? Source { get; set; } = AvaloniaProperty.UnsetValue;`
+- `public string Path { get; set; } = "";`
+- `public Func<string?, string, Type>? TypeResolver { get; set; }`
+- `public override InstancedBinding? Initiate( AvaloniaObject target, AvaloniaProperty? targetProperty, object? anchor = null, bool enableDataValidation = false) {`
 
 ## iOS Platform
 
@@ -1640,7 +1591,7 @@ python3 scripts/generate_api_index.py --repo <path-to-avalonia-repo> --output re
 - `public class AvaloniaNativePlatformOptions`
 - `public IReadOnlyList<AvaloniaNativeRenderingMode> RenderingMode { get; set; } = new[]`
 - `public bool OverlayPopups { get; set; }`
-- `public string? AvaloniaNativeLibraryPath { get; set; }`
+- `public string AvaloniaNativeLibraryPath { get; set; }`
 - `public bool AppSandboxEnabled { get; set; } = true;`
 - `public class MacOSPlatformOptions`
 - `public bool ShowInDock { get; set; } = true;`

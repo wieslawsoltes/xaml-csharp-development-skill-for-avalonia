@@ -8,10 +8,14 @@ binding, styling, threading, platform bootstrap), not a full compiler-accurate A
 from __future__ import annotations
 
 import argparse
+from collections.abc import Callable
 import datetime as dt
 import pathlib
 import re
+import shutil
+import subprocess
 import sys
+import tempfile
 from dataclasses import dataclass
 
 DEFAULT_PATTERNS = [
@@ -247,8 +251,10 @@ def resolve_files(repo: pathlib.Path, patterns: list[str]) -> list[pathlib.Path]
 def write_markdown(
     output: pathlib.Path,
     repo: pathlib.Path,
+    repo_label: str,
     files: list[pathlib.Path],
     max_per_file: int,
+    git_ref: str | None = None,
 ) -> tuple[int, int]:
     now = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M:%SZ")
 
@@ -269,7 +275,9 @@ def write_markdown(
     lines.append("# Avalonia App-Building API Index (Generated)")
     lines.append("")
     lines.append(f"- Generated at (UTC): `{now}`")
-    lines.append(f"- Repository: `{repo.name}`")
+    lines.append(f"- Repository: `{repo_label}`")
+    if git_ref:
+        lines.append(f"- Git ref: `{git_ref}`")
     lines.append(f"- Files scanned: `{len(files)}`")
     lines.append(f"- Captured public signatures: `{total_sigs}`")
     lines.append("")
@@ -279,8 +287,12 @@ def write_markdown(
     lines.append("")
     lines.append("## Regenerate")
     lines.append("")
+    regen_cmd = "python3 scripts/generate_api_index.py --repo <path-to-avalonia-repo>"
+    if git_ref:
+        regen_cmd += f" --git-ref {git_ref}"
+    regen_cmd += " --output references/api-index-generated.md"
     lines.append("```bash")
-    lines.append("python3 scripts/generate_api_index.py --repo <path-to-avalonia-repo> --output references/api-index-generated.md")
+    lines.append(regen_cmd)
     lines.append("```")
     lines.append("")
 
@@ -328,6 +340,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="Output markdown file path.",
     )
     parser.add_argument(
+        "--git-ref",
+        default=None,
+        help="Optional git ref (tag/branch/commit) to scan via a detached worktree.",
+    )
+    parser.add_argument(
         "--pattern",
         action="append",
         default=[],
@@ -342,6 +359,40 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def prepare_scan_repo(repo: pathlib.Path, git_ref: str | None) -> tuple[pathlib.Path, str, Callable[[], None]]:
+    if not git_ref:
+        return repo, repo.name, lambda: None
+
+    if not (repo / ".git").exists():
+        raise RuntimeError(f"--git-ref requires a git repository path: {repo}")
+
+    safe_ref = re.sub(r"[^A-Za-z0-9._-]+", "-", git_ref)
+    temp_repo = pathlib.Path(tempfile.mkdtemp(prefix=f"{repo.name}-{safe_ref}-"))
+
+    try:
+        subprocess.run(
+            ["git", "-C", str(repo), "worktree", "add", "--detach", str(temp_repo), git_ref],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except subprocess.CalledProcessError as ex:
+        shutil.rmtree(temp_repo, ignore_errors=True)
+        message = ex.stderr.strip() or ex.stdout.strip() or str(ex)
+        raise RuntimeError(f"failed to create worktree for git ref '{git_ref}': {message}") from ex
+
+    def cleanup() -> None:
+        subprocess.run(
+            ["git", "-C", str(repo), "worktree", "remove", "--force", str(temp_repo)],
+            check=False,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+        shutil.rmtree(temp_repo, ignore_errors=True)
+
+    return temp_repo, f"{repo.name}@{git_ref}", cleanup
+
+
 def main() -> int:
     parser = build_parser()
     args = parser.parse_args()
@@ -353,17 +404,33 @@ def main() -> int:
         print(f"error: invalid repo path: {repo}", file=sys.stderr)
         return 2
 
+    try:
+        scan_repo, repo_label, cleanup = prepare_scan_repo(repo, args.git_ref)
+    except RuntimeError as ex:
+        print(f"error: {ex}", file=sys.stderr)
+        return 4
+
     patterns = list(DEFAULT_PATTERNS)
     patterns.extend(args.pattern)
 
-    files = resolve_files(repo, patterns)
-    if not files:
-        print("error: no files matched configured patterns", file=sys.stderr)
-        return 3
+    try:
+        files = resolve_files(scan_repo, patterns)
+        if not files:
+            print("error: no files matched configured patterns", file=sys.stderr)
+            return 3
 
-    file_count, sig_count = write_markdown(output, repo, files, max_per_file=args.max_per_file)
-    print(f"Wrote {output} ({file_count} files, {sig_count} signatures)")
-    return 0
+        file_count, sig_count = write_markdown(
+            output,
+            scan_repo,
+            repo_label,
+            files,
+            max_per_file=args.max_per_file,
+            git_ref=args.git_ref,
+        )
+        print(f"Wrote {output} ({file_count} files, {sig_count} signatures)")
+        return 0
+    finally:
+        cleanup()
 
 
 if __name__ == "__main__":

@@ -32,13 +32,14 @@ internal static class Program
 }
 ```
 
-## App Baseline (Desktop + SingleView + Activity)
+## App Baseline (Desktop + SingleView + Activation Feature)
 
 ```csharp
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Avalonia.Platform;
 
 public class App : Application
 {
@@ -54,19 +55,18 @@ public class App : Application
                 DataContext = new MainWindowViewModel()
             };
         }
-        else if (ApplicationLifetime is IActivityApplicationLifetime activity)
-        {
-            activity.MainViewFactory = () => new MainView
-            {
-                DataContext = new MainViewModel()
-            };
-        }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleView)
         {
             singleView.MainView = new MainView
             {
                 DataContext = new MainViewModel()
             };
+        }
+
+        if (Application.Current?.TryGetFeature<IActivatableLifetime>() is { } activatable)
+        {
+            activatable.Activated += (_, _) => { };
+            activatable.Deactivated += (_, _) => { };
         }
 
         base.OnFrameworkInitializationCompleted();
@@ -78,7 +78,7 @@ public class App : Application
 
 - Choose `IClassicDesktopStyleApplicationLifetime` when multiple windows/dialogs/system menu integration are required.
 - Choose `ISingleViewApplicationLifetime` when the host presents one root view (browser/mobile shell).
-- Choose `IActivityApplicationLifetime` when platform lifecycle requires creating views on demand per activity/context.
+- Use `IActivatableLifetime` feature hooks when you need activation/deactivation events from the host platform.
 
 ## Shutdown Behavior
 

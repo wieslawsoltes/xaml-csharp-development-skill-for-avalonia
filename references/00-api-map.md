@@ -14,7 +14,6 @@ Primary composition root:
 - `UseRuntimePlatformSubsystem(Action, string)`
 - `UseStandardRuntimePlatformSubsystem()`
 - `With<T>(T options)` / `With<T>(Func<T>)`
-- `WithDataAnnotationsValidation()`
 - `ConfigureFonts(Action<FontManager>)`
 - `SetupWithoutStarting()`
 - `SetupWithLifetime(IApplicationLifetime)`
@@ -56,8 +55,8 @@ Use:
   - `Startup`, `Exit`, `Shutdown(...)`
 - `ISingleViewApplicationLifetime`
   - `MainView`
-- `IActivityApplicationLifetime`
-  - `MainViewFactory`
+- `IActivatableLifetime` (feature API)
+  - `Activated`, `Deactivated`, `TryLeaveBackground()`, `TryEnterBackground()`
 
 Desktop helpers:
 - `SetupWithClassicDesktopLifetime(...)`
@@ -65,7 +64,8 @@ Desktop helpers:
 
 Use:
 - Desktop: set `MainWindow`.
-- Browser/mobile/single-view targets: set `MainView` or `MainViewFactory`.
+- Browser/mobile/single-view targets: set `MainView`.
+- For activation/deactivation hooks, use `Application.Current?.TryGetFeature<IActivatableLifetime>()`.
 
 ## 2) XAML Loading and Binding
 
@@ -138,7 +138,7 @@ Use:
 - `SetValue(...)`
 - `SetCurrentValue(...)`
 - `ClearValue(...)`
-- `Bind(AvaloniaProperty, BindingBase)`
+- `Bind(AvaloniaProperty, IBinding)`
 - `Bind(AvaloniaProperty, IObservable<object?>, BindingPriority)`
 
 Use:
@@ -247,7 +247,6 @@ Use:
 Desktop and shared:
 - `UsePlatformDetect()`
 - `UseSkia()`
-- `UseHarfBuzz()`
 - `WithInterFont()`
 - `UseManagedSystemDialogs()`
 

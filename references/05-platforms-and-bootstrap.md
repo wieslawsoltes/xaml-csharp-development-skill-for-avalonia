@@ -13,12 +13,11 @@ public static AppBuilder BuildAvaloniaApp()
 `UsePlatformDetect()` on desktop wires:
 - Win32/X11/AvaloniaNative windowing backend (per OS)
 - Skia rendering
-- HarfBuzz text shaping
+- HarfBuzz text shaping through the Skia stack
 
 ## Common Cross-Platform Extensions
 
 - `UseSkia()`
-- `UseHarfBuzz()`
 - `WithInterFont()`
 - `UseManagedSystemDialogs()`
 

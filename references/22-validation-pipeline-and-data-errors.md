@@ -16,7 +16,7 @@ Primary APIs:
 - `BindingNotification`
 - `BindingErrorType`
 - `DataValidationException`
-- `AppBuilder.WithDataAnnotationsValidation()`
+- `BindingPlugins.DataValidators`
 
 Important members:
 - `DataValidationErrors.ErrorsProperty`, `HasErrorsProperty`, `ErrorConverterProperty`
@@ -30,7 +30,7 @@ Reference source files:
 - `src/Avalonia.Controls/DataValidationErrors.cs`
 - `src/Avalonia.Base/Data/BindingNotification.cs`
 - `src/Avalonia.Base/Data/DataValidationException.cs`
-- `src/Avalonia.Controls/AppBuilder.cs`
+- `src/Avalonia.Base/Data/Core/Plugins/BindingPlugins.cs`
 - `src/Avalonia.Base/Data/Core/Plugins/DataAnnotationsValidationPlugin.cs`
 
 ## Validation Pipeline
@@ -66,11 +66,12 @@ public class EmailEditor : Avalonia.Controls.TemplatedControl
 }
 ```
 
-### Enable data annotations plugin in app startup
+### Data annotations plugin registration (11.3.12)
+
+`DataAnnotationsValidationPlugin` is registered by default in `BindingPlugins.DataValidators`, so no `AppBuilder` extension call is required.
 
 ```csharp
 AppBuilder.Configure<App>()
-    .WithDataAnnotationsValidation()
     .UsePlatformDetect()
     .StartWithClassicDesktopLifetime(args);
 ```
@@ -96,7 +97,7 @@ DataValidationErrors.SetErrorConverter(textBox, error =>
 
 ## AOT and Trimming Guidance
 
-- `WithDataAnnotationsValidation()` and `DataAnnotationsValidationPlugin` rely on reflection and are marked as trimming-sensitive.
+- `DataAnnotationsValidationPlugin` relies on reflection and is trimming-sensitive.
 - For NativeAOT-sensitive apps, prefer explicit validation via `INotifyDataErrorInfo` patterns and compiled bindings.
 - Keep validation logic in viewmodels/services, not UI code-behind.
 
@@ -110,7 +111,7 @@ DataValidationErrors.SetErrorConverter(textBox, error =>
 - Error objects need conversion; set `ErrorConverter`.
 
 3. DataAnnotations does not run:
-- `WithDataAnnotationsValidation()` not called.
+- `DataAnnotationsValidationPlugin` was removed from `BindingPlugins.DataValidators`.
 - Trimmed build removed needed metadata.
 
 4. Error state does not clear:
