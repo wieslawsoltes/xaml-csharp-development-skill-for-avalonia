@@ -443,7 +443,7 @@ def write_index(output_dir: pathlib.Path, controls: list[TypeInfo], git_ref: str
         lines.append(f"## {namespace}")
         lines.append("")
         for name, slug, full_name in sorted(grouped[namespace], key=lambda x: x[2]):
-            lines.append(f"- [{name}]({slug}.md) (`{full_name}`)")
+            lines.append(f"- [{name}]({slug}) (`{full_name}`)")
         lines.append("")
 
     (output_dir / "README.md").write_text("\n".join(lines), encoding="utf-8")
