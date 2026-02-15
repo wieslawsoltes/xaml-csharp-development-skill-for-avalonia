@@ -15,7 +15,7 @@ INDEX_SOURCE_RE = re.compile(r"^### `([^`]+)`\s*$")
 INDEX_ENTRY_RE = re.compile(r"^- `([^`]+)`\s*$")
 TYPE_DECL_RE = re.compile(
     r"^public\s+(?:new\s+|unsafe\s+|abstract\s+|sealed\s+|static\s+|partial\s+|readonly\s+|ref\s+)*"
-    r"(?:class|interface|struct|enum|record)\s+([A-Za-z_][A-Za-z0-9_`.]*)"
+    r"(?:class|interface|struct|enum|record(?:\s+class|\s+struct)?)\s+([A-Za-z_][A-Za-z0-9_`.]*)"
 )
 DELEGATE_RE = re.compile(
     r"^public\s+(?:new\s+|unsafe\s+|static\s+|partial\s+|readonly\s+|ref\s+)*delegate\s+[^(]*\b([A-Za-z_][A-Za-z0-9_]*)\s*\("
@@ -55,8 +55,52 @@ def normalize_symbol(token: str) -> str:
     return name
 
 
+def find_outer_parameter_paren(decl: str) -> int:
+    """Find the first '(' outside generic angle brackets."""
+    depth = 0
+    for i, ch in enumerate(decl):
+        if ch == "<":
+            depth += 1
+        elif ch == ">":
+            if depth > 0:
+                depth -= 1
+        elif ch == "(" and depth == 0:
+            return i
+    return -1
+
+
+def extract_symbol_before_paren(decl: str, paren_idx: int) -> str:
+    i = paren_idx - 1
+    while i >= 0 and decl[i].isspace():
+        i -= 1
+    if i < 0:
+        return ""
+
+    # Skip generic method argument list, e.g. Register<TOwner, TEventArgs>(...)
+    if decl[i] == ">":
+        depth = 1
+        i -= 1
+        while i >= 0 and depth > 0:
+            if decl[i] == ">":
+                depth += 1
+            elif decl[i] == "<":
+                depth -= 1
+            i -= 1
+        while i >= 0 and decl[i].isspace():
+            i -= 1
+        if i < 0:
+            return ""
+
+    end = i
+    while i >= 0 and (decl[i].isalnum() or decl[i] in "_.`"):
+        i -= 1
+    return decl[i + 1 : end + 1]
+
+
 def parse_signature(signature: str) -> tuple[str, str]:
     sig = normalize_ws(signature)
+    decl = re.split(r"{|=>|=|;", sig, maxsplit=1)[0].strip()
+
     type_match = TYPE_DECL_RE.match(sig)
     if type_match:
         return "type", normalize_symbol(type_match.group(1))
@@ -76,14 +120,14 @@ def parse_signature(signature: str) -> tuple[str, str]:
     if operator_match:
         return "operator", operator_match.group(1)
 
-    if "(" in sig:
-        pre = sig.split("(", 1)[0].strip()
-        token = pre.split()[-1] if pre else ""
-        symbol = normalize_symbol(token)
+    # Methods/constructors must be detected from declaration side only.
+    # Avoid false positives where tuple/generic return types include parentheses.
+    paren_idx = find_outer_parameter_paren(decl)
+    if paren_idx != -1:
+        symbol = normalize_symbol(extract_symbol_before_paren(decl, paren_idx))
         return ("method", symbol) if symbol else ("unknown", "")
 
-    pre = re.split(r"{|=>|=|;", sig, maxsplit=1)[0].strip()
-    token = pre.split()[-1] if pre else ""
+    token = decl.split()[-1] if decl else ""
     symbol = normalize_symbol(token)
     return ("member", symbol) if symbol else ("unknown", "")
 
@@ -288,7 +332,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--output",
         type=pathlib.Path,
-        default=pathlib.Path("references/api-coverage-not-covered.md"),
+        default=pathlib.Path("plan/api-coverage-not-covered.md"),
         help="Output markdown report path.",
     )
     parser.add_argument(
