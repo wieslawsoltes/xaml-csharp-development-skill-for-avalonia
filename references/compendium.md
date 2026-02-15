@@ -39,7 +39,17 @@ Use this as the entry page for the full skill reference set.
 33. Launcher + external open: `32-launcher-and-external-open.md`
 34. Screens + display awareness: `33-screens-and-display-awareness.md`
 35. DragDrop workflows: `34-dragdrop-workflows.md`
-36. Generated API index: `api-index-generated.md`
+36. Path icons + vector geometry assets: `35-path-icons-and-vector-geometry-assets.md`
+37. Adorners, focus visuals, overlay layers: `36-adorners-focus-and-overlay-layers.md`
+38. Shapes, geometry, hit testing: `37-shapes-geometry-and-hit-testing.md`
+39. Data templates + IDataTemplate selector patterns: `38-data-templates-and-idatatemplate-selector-patterns.md`
+40. Visual tree inspection + traversal: `39-visual-tree-inspection-and-traversal.md`
+41. Logical tree inspection + traversal: `40-logical-tree-inspection-and-traversal.md`
+42. XAML compiler and build pipeline: `41-xaml-compiler-and-build-pipeline.md`
+43. Runtime XAML loader and dynamic loading: `42-runtime-xaml-loader-and-dynamic-loading.md`
+44. XAML in libraries and resource packaging: `43-xaml-in-libraries-and-resource-packaging.md`
+45. Runtime XAML manipulation and service-provider patterns: `44-runtime-xaml-manipulation-and-service-provider-patterns.md`
+46. Generated API index: `api-index-generated.md`
 
 ## Fast Navigation by Task
 
@@ -55,9 +65,19 @@ Use this as the entry page for the full skill reference set.
   - `33-screens-and-display-awareness.md`
   - `34-dragdrop-workflows.md`
 
+- XAML compiler, runtime loader, and manipulation:
+  - `41-xaml-compiler-and-build-pipeline.md`
+  - `42-runtime-xaml-loader-and-dynamic-loading.md`
+  - `43-xaml-in-libraries-and-resource-packaging.md`
+  - `44-runtime-xaml-manipulation-and-service-provider-patterns.md`
+
 - Binding correctness and AOT safety:
   - `02-bindings-xaml-aot.md`
   - `06-msbuild-aot-and-tooling.md`
+  - `41-xaml-compiler-and-build-pipeline.md`
+  - `42-runtime-xaml-loader-and-dynamic-loading.md`
+  - `44-runtime-xaml-manipulation-and-service-provider-patterns.md`
+  - `38-data-templates-and-idatatemplate-selector-patterns.md`
 
 - Reactive UI correctness:
   - `03-reactive-threading.md`
@@ -67,21 +87,28 @@ Use this as the entry page for the full skill reference set.
   - `10-templated-controls-and-control-themes.md`
   - `16-property-system-attached-properties-behaviors-and-style-properties.md`
   - `17-resources-assets-theme-variants-and-xmlns.md`
+  - `43-xaml-in-libraries-and-resource-packaging.md`
   - `28-custom-themes-xaml-and-code-only.md`
 
 - View composition and lookup patterns:
   - `11-user-views-locator-and-tree-patterns.md`
+  - `38-data-templates-and-idatatemplate-selector-patterns.md`
+  - `39-visual-tree-inspection-and-traversal.md`
+  - `40-logical-tree-inspection-and-traversal.md`
 
 - Input, focus, and interaction routing:
   - `18-input-system-and-routed-events.md`
   - `19-focus-and-keyboard-navigation.md`
   - `24-commands-hotkeys-and-gestures.md`
   - `34-dragdrop-workflows.md`
+  - `36-adorners-focus-and-overlay-layers.md`
+  - `39-visual-tree-inspection-and-traversal.md`
 
 - Large-data item controls:
   - `30-layout-measure-arrange-and-custom-layout-controls.md`
   - `20-itemscontrol-virtualization-and-recycling.md`
   - `21-custom-layout-authoring.md`
+  - `38-data-templates-and-idatatemplate-selector-patterns.md`
 
 - Validation and accessibility:
   - `22-validation-pipeline-and-data-errors.md`
@@ -97,6 +124,8 @@ Use this as the entry page for the full skill reference set.
 
 - Drawing and graphics:
   - `14-custom-drawing-text-shapes-and-skia.md`
+  - `35-path-icons-and-vector-geometry-assets.md`
+  - `37-shapes-geometry-and-hit-testing.md`
 
 - Testing and diagnostics:
   - `26-testing-stack-headless-render-and-ui-tests.md`

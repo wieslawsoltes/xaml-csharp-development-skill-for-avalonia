@@ -15,7 +15,7 @@ Primary entry for the full reference set:
 1. Define app scope, API surface, and lifetime model.
 - Read `references/00-api-map.md`.
 - Read `references/01-architecture-and-lifetimes.md`.
-- Choose the lifetime first (`IClassicDesktopStyleApplicationLifetime`, `ISingleViewApplicationLifetime`, or `IActivityApplicationLifetime`).
+- Choose the root lifetime first (`IClassicDesktopStyleApplicationLifetime` or `ISingleViewApplicationLifetime`) and use `IActivatableLifetime` as an optional feature hook when needed.
 
 2. Lock platform bootstrap and build pipeline before UI work.
 - Read `references/05-platforms-and-bootstrap.md`.
@@ -24,16 +24,22 @@ Primary entry for the full reference set:
 - Read `references/32-launcher-and-external-open.md`.
 - Read `references/33-screens-and-display-awareness.md`.
 - Read `references/06-msbuild-aot-and-tooling.md`.
+- Read `references/41-xaml-compiler-and-build-pipeline.md`.
 - Set platform options and confirm XAML/compiled-binding configuration for AOT.
 
 3. Establish binding, XAML, reactive, and command architecture.
 - Read `references/02-bindings-xaml-aot.md`.
+- Read `references/42-runtime-xaml-loader-and-dynamic-loading.md`.
+- Read `references/44-runtime-xaml-manipulation-and-service-provider-patterns.md`.
 - Read `references/03-reactive-threading.md`.
 - Read `references/24-commands-hotkeys-and-gestures.md`.
 - Default to compiled bindings with `x:DataType`; keep UI-thread mutations explicit.
 
 4. Build view composition, locator strategy, and interaction routing.
 - Read `references/11-user-views-locator-and-tree-patterns.md`.
+- Read `references/38-data-templates-and-idatatemplate-selector-patterns.md`.
+- Read `references/39-visual-tree-inspection-and-traversal.md`.
+- Read `references/40-logical-tree-inspection-and-traversal.md`.
 - Read `references/18-input-system-and-routed-events.md`.
 - Read `references/19-focus-and-keyboard-navigation.md`.
 - Read `references/34-dragdrop-workflows.md`.
@@ -43,11 +49,14 @@ Primary entry for the full reference set:
 - Read `references/16-property-system-attached-properties-behaviors-and-style-properties.md`.
 - Read `references/04-styles-themes-resources.md`.
 - Read `references/17-resources-assets-theme-variants-and-xmlns.md`.
+- Read `references/43-xaml-in-libraries-and-resource-packaging.md`.
+- Read `references/35-path-icons-and-vector-geometry-assets.md`.
 - Read `references/28-custom-themes-xaml-and-code-only.md`.
 - Keep property metadata, style selectors, media rules, and resource lookup predictable.
 
 6. Implement controls and window surfaces.
 - Read `references/10-templated-controls-and-control-themes.md`.
+- Read `references/36-adorners-focus-and-overlay-layers.md`.
 - Read `references/13-windowing-and-custom-decorations.md`.
 - Read `references/25-popups-flyouts-tooltips-and-overlays.md`.
 - Separate control contract, template parts, and platform-specific window/popup behavior.
@@ -62,6 +71,7 @@ Primary entry for the full reference set:
 - Read `references/12-animations-transitions-and-frame-loops.md`.
 - Read `references/15-compositor-and-custom-visuals.md`.
 - Read `references/14-custom-drawing-text-shapes-and-skia.md`.
+- Read `references/37-shapes-geometry-and-hit-testing.md`.
 - Prefer built-in transitions/animations first; use custom draw/compositor paths for hotspots.
 
 9. Complete validation, accessibility, and automation semantics.
@@ -92,12 +102,14 @@ Regenerate index after repo upgrades or if API drift is suspected:
 ```bash
 python3 scripts/generate_api_index.py \
   --repo <path-to-avalonia-repo> \
+  --git-ref 11.3.12 \
   --output references/api-index-generated.md
 ```
 
 Search patterns for the large generated index:
 - `rg -n "AppBuilder|ApplicationLifetime|StartWithClassicDesktopLifetime" references/api-index-generated.md`
 - `rg -n "CompiledBinding|ReflectionBinding|AvaloniaXamlLoader" references/api-index-generated.md`
+- `rg -n "AvaloniaRuntimeXamlLoader|RuntimeXamlLoaderConfiguration|ResourceInclude|StyleInclude" references/api-index-generated.md`
 - `rg -n "UseWin32|UseX11|UseAvaloniaNative|UseBrowser|UseAndroid|UseiOS" references/api-index-generated.md`
 
 ## Execution Rules
