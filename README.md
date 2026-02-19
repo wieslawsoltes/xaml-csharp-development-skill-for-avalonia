@@ -168,6 +168,23 @@ Recent additions include focused references for:
   - deep rendering-system migration (`Visual`, `DrawingVisual`, `CompositionTarget.Rendering`) to Avalonia `Render`/compositor patterns,
   - accessibility/RTL/localization/testing/perf hardening and migration playbook guidance,
   - API-coverage manifest linking WPF source checkpoints to Avalonia lookup references.
+- WinUI-to-Avalonia migration lane (`references/65-winui-to-avalonia-modern-ui-conversion-index.md`) with detailed topics in `references/winui-to-avalonia/`:
+  - dependency property/object-system migration (`DependencyObject`, `DependencyProperty`) to Avalonia property patterns,
+  - WinUI layout-system migration (measure/arrange invalidation model, panel mapping, `UpdateLayout` boundaries),
+  - WinUI rendering/composition migration (`CompositionTarget.Rendering`, compositor patterns) to Avalonia render/compositor paths,
+  - navigation/shell/dialog migration (`NavigationView`, `Frame/Page`, `ContentDialog`, `AppWindow`) to Avalonia shell/dialog patterns,
+  - WinUI control-family migration (`TabView`, `TreeView`, `ItemsRepeater`, `InfoBar`, `TeachingTip`, `SplitButton`) to Avalonia control equivalents,
+  - resources/theming/state migration (`ThemeResource`, `VisualStateManager`, adaptive triggers) to Avalonia resources/selectors/transitions,
+  - input/command/keyboard migration (`KeyboardAccelerator`, routed input, command surfaces) to `KeyBinding` + `ICommand` flows,
+  - platform integration migration (drag/drop, clipboard, interop, WebView boundary patterns),
+  - advanced shell/control migration (NavigationView pane modes, ItemsRepeater/virtualization, ListView/GridView selection semantics),
+  - command/guidance surface migration (CommandBarFlyout, InfoBar, TeachingTip, ContentDialog workflow patterns),
+  - advanced platform/render-host migration (`XamlRoot`/`AppWindow` coordination, composition visual layer, SwapChain/Win2D hosting boundaries),
+  - platform services and lifecycle migration (file pickers, launcher, activation contracts, menu/tray integration, in-app notification flows),
+  - advanced control migration (`RefreshContainer`, `SwipeControl`, `TwoPaneView`, `SelectorBar`, `BreadcrumbBar`, `Pager`, `PipsPager`),
+  - integration and dynamic-UI migration (titlebar/system backdrop, runtime XAML loading/resource packaging, WebView2 boundaries, `ItemsView`/`LayoutPanel` strategies),
+  - low-level framework migration (property type/metadata/precedence mapping, visual/logical tree traversal, NameScope/template-part contracts, selector/resource/theme resolution internals),
+  - API-coverage manifest linking WinUI source checkpoints and online API docs to Avalonia lookup references.
 
 These are designed to reduce accidental drift to unreleased APIs.
 

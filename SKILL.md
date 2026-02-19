@@ -119,6 +119,10 @@ Primary entry for the full reference set:
 - Read `references/64-wpf-to-avalonia-modern-ui-conversion-index.md`.
 - Use detailed topic docs under `references/wpf-to-avalonia/` (index at `references/wpf-to-avalonia/README.md`, currently `00`-`45`).
 
+15. For Windows App SDK / WinUI migration work, map WinUI idioms explicitly.
+- Read `references/65-winui-to-avalonia-modern-ui-conversion-index.md`.
+- Use detailed topic docs under `references/winui-to-avalonia/` (index at `references/winui-to-avalonia/README.md`, currently `00`-`66`).
+
 ## Public API Coverage
 
 Use curated app-building API guidance first:

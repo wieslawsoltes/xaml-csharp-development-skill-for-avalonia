@@ -69,6 +69,7 @@ Use this as the entry page for the full skill reference set.
 62. HTML/CSS to Avalonia modern UI conversion index: [`62-html-css-to-avalonia-modern-ui-conversion-index.md`](62-html-css-to-avalonia-modern-ui-conversion-index)
 63. WinForms to Avalonia modern UI conversion index: [`63-winforms-to-avalonia-modern-ui-conversion-index.md`](63-winforms-to-avalonia-modern-ui-conversion-index)
 64. WPF to Avalonia modern UI conversion index: [`64-wpf-to-avalonia-modern-ui-conversion-index.md`](64-wpf-to-avalonia-modern-ui-conversion-index)
+65. WinUI to Avalonia modern UI conversion index: [`65-winui-to-avalonia-modern-ui-conversion-index.md`](65-winui-to-avalonia-modern-ui-conversion-index)
 API index: [`api-index-generated.md`](api-index-generated)
 
 ## Fast Navigation by Task
@@ -198,3 +199,7 @@ API index: [`api-index-generated.md`](api-index-generated)
 - WPF modern UI migration:
   - [`64-wpf-to-avalonia-modern-ui-conversion-index.md`](64-wpf-to-avalonia-modern-ui-conversion-index)
   - Detailed topics (`00`-`45`): [`wpf-to-avalonia/README.md`](wpf-to-avalonia/README)
+
+- WinUI modern UI migration:
+  - [`65-winui-to-avalonia-modern-ui-conversion-index.md`](65-winui-to-avalonia-modern-ui-conversion-index)
+  - Detailed topics (`00`-`66`): [`winui-to-avalonia/README.md`](winui-to-avalonia/README)
