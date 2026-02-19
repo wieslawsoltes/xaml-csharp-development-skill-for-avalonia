@@ -1,0 +1,48 @@
+# WinForms to Avalonia Detailed References
+
+This folder contains the detailed WinForms-to-Avalonia conversion references.
+
+Root entrypoint:
+- [`../63-winforms-to-avalonia-modern-ui-conversion-index.md`](../63-winforms-to-avalonia-modern-ui-conversion-index)
+
+## Contents
+
+- [`00-winforms-control-lifecycle-and-layout-basics.md`](00-winforms-control-lifecycle-and-layout-basics)
+- [`01-winforms-layout-panels-flow-table-dock-anchor.md`](01-winforms-layout-panels-flow-table-dock-anchor)
+- [`02-winforms-split-container-mdi-and-navigation-shells.md`](02-winforms-split-container-mdi-and-navigation-shells)
+- [`03-winforms-events-commands-shortcuts-and-input.md`](03-winforms-events-commands-shortcuts-and-input)
+- [`04-winforms-data-binding-bindingsource-and-viewmodels.md`](04-winforms-data-binding-bindingsource-and-viewmodels)
+- [`05-winforms-validation-errorprovider-and-data-errors.md`](05-winforms-validation-errorprovider-and-data-errors)
+- [`06-winforms-datagridview-listview-treeview-to-avalonia-items-controls.md`](06-winforms-datagridview-listview-treeview-to-avalonia-items-controls)
+- [`07-winforms-menus-toolstrips-contextmenus-status-and-tray.md`](07-winforms-menus-toolstrips-contextmenus-status-and-tray)
+- [`08-winforms-dialogs-file-pickers-and-window-modal-workflows.md`](08-winforms-dialogs-file-pickers-and-window-modal-workflows)
+- [`09-winforms-timers-backgroundworker-and-ui-thread-dispatch.md`](09-winforms-timers-backgroundworker-and-ui-thread-dispatch)
+- [`10-winforms-ownerdraw-gdi-and-custom-rendering-to-avalonia.md`](10-winforms-ownerdraw-gdi-and-custom-rendering-to-avalonia)
+- [`11-winforms-styling-theming-and-control-templates.md`](11-winforms-styling-theming-and-control-templates)
+- [`12-winforms-custom-controls-usercontrol-and-templatedcontrol.md`](12-winforms-custom-controls-usercontrol-and-templatedcontrol)
+- [`13-winforms-high-dpi-scaling-and-flow-direction-rtl.md`](13-winforms-high-dpi-scaling-and-flow-direction-rtl)
+- [`14-winforms-application-lifetime-window-management-and-services.md`](14-winforms-application-lifetime-window-management-and-services)
+- [`15-winforms-resources-localization-settings-and-assets.md`](15-winforms-resources-localization-settings-and-assets)
+- [`16-winforms-to-avalonia-migration-playbook.md`](16-winforms-to-avalonia-migration-playbook)
+- [`17-winforms-to-avalonia-api-coverage-manifest-controls-layout-styling-platform.md`](17-winforms-to-avalonia-api-coverage-manifest-controls-layout-styling-platform)
+- [`18-winforms-native-interop-and-webbrowser-replacement-strategies.md`](18-winforms-native-interop-and-webbrowser-replacement-strategies)
+- [`19-winforms-testing-diagnostics-and-regression-safety.md`](19-winforms-testing-diagnostics-and-regression-safety)
+- [`20-winforms-input-controls-text-masked-combo-autocomplete-numeric.md`](20-winforms-input-controls-text-masked-combo-autocomplete-numeric)
+- [`21-winforms-date-time-and-calendar-controls.md`](21-winforms-date-time-and-calendar-controls)
+- [`22-winforms-choice-controls-checkbox-radio-and-checked-lists.md`](22-winforms-choice-controls-checkbox-radio-and-checked-lists)
+- [`23-winforms-tabcontrol-tabpage-and-document-workspaces.md`](23-winforms-tabcontrol-tabpage-and-document-workspaces)
+- [`24-winforms-tooltip-helpprovider-and-context-guidance.md`](24-winforms-tooltip-helpprovider-and-context-guidance)
+- [`25-winforms-progress-trackbar-and-status-feedback-patterns.md`](25-winforms-progress-trackbar-and-status-feedback-patterns)
+- [`26-winforms-picturebox-imagelist-and-icon-asset-migration.md`](26-winforms-picturebox-imagelist-and-icon-asset-migration)
+- [`27-winforms-propertygrid-and-inspector-editor-patterns.md`](27-winforms-propertygrid-and-inspector-editor-patterns)
+- [`28-winforms-dragdrop-clipboard-and-data-transfer.md`](28-winforms-dragdrop-clipboard-and-data-transfer)
+- [`29-winforms-printing-printpreview-and-export-workflows.md`](29-winforms-printing-printpreview-and-export-workflows)
+- [`30-winforms-notifications-balloon-tip-and-toast-patterns.md`](30-winforms-notifications-balloon-tip-and-toast-patterns)
+- [`31-winforms-splitter-scrollablecontrol-autoscroll-and-resizable-regions.md`](31-winforms-splitter-scrollablecontrol-autoscroll-and-resizable-regions)
+- [`32-winforms-listview-details-groups-and-large-data-sets.md`](32-winforms-listview-details-groups-and-large-data-sets)
+- [`33-winforms-treeview-lazy-loading-selection-and-check-state.md`](33-winforms-treeview-lazy-loading-selection-and-check-state)
+- [`34-winforms-richtextbox-linklabel-and-rich-content-patterns.md`](34-winforms-richtextbox-linklabel-and-rich-content-patterns)
+- [`35-winforms-toolstrip-dropdown-and-split-button-patterns.md`](35-winforms-toolstrip-dropdown-and-split-button-patterns)
+- [`36-winforms-acceptbutton-cancelbutton-and-keyboard-processing.md`](36-winforms-acceptbutton-cancelbutton-and-keyboard-processing)
+- [`37-winforms-layout-system-engine-invalidations-and-migration.md`](37-winforms-layout-system-engine-invalidations-and-migration)
+- [`38-winforms-rendering-paint-pipeline-double-buffering-and-migration.md`](38-winforms-rendering-paint-pipeline-double-buffering-and-migration)
