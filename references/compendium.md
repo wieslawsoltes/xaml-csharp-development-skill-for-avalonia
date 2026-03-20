@@ -76,7 +76,7 @@ Use this as the entry page for the full skill reference set.
 69. Avalonia 12 breaking changes and new API catalog: [`69-avalonia-12-breaking-changes-and-new-api-catalog.md`](69-avalonia-12-breaking-changes-and-new-api-catalog)
 API indexes:
 - stable: [`api-index-generated.md`](api-index-generated)
-- Avalonia 12 RC1: [`api-index-12.0.0-rc1-generated.md`](api-index-12.0.0-rc1-generated)
+- Avalonia 12 generated index for the latest published `12.0.0*` tag currently tracked here (`12.0.0-rc1`): [`api-index-12.0.0-rc1-generated.md`](api-index-12.0.0-rc1-generated)
 
 ## Fast Navigation by Task
 

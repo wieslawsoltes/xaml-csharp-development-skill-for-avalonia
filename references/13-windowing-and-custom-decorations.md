@@ -32,6 +32,10 @@ Related platform-facing interfaces (mostly backend-level):
 - `IWindowImpl`
 - `IWindowingPlatform`
 
+Version note:
+- this stable reference describes the `11.3.12` windowing surface,
+- for Avalonia 12 migration, see [`68-avalonia-12-migration-guide.md`](68-avalonia-12-migration-guide) because `SystemDecorations` moved to `WindowDecorations`, `ExtendClientAreaChromeHints` was removed, and `TitleBar` / `CaptionButtons` / `ChromeOverlayLayer` were replaced by the newer drawn-decoration model.
+
 For service access from top-level surfaces (`StorageProvider`, `Clipboard`, `Launcher`, `Screens`, platform handle), see:
 - [`48-toplevel-window-and-runtime-services.md`](48-toplevel-window-and-runtime-services)
 
@@ -135,6 +139,8 @@ Built-in managed decoration controls:
 
 - `Avalonia.Controls.Chrome.TitleBar`
 - `Avalonia.Controls.Chrome.CaptionButtons`
+
+For Avalonia 12 migration, replace new usage of these controls with the `WindowDrawnDecorations`-based model described in [`68-avalonia-12-migration-guide.md`](68-avalonia-12-migration-guide).
 
 ## Window Metadata and Event Argument APIs
 

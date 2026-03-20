@@ -44,6 +44,10 @@ Reference source files:
 - `src/Headless/Avalonia.Headless.XUnit/AvaloniaTheoryAttribute.cs`
 - `tests/Avalonia.Headless.UnitTests/TestApplication.cs`
 
+Version note:
+- the test-driving patterns in this reference still apply on Avalonia 12,
+- but Avalonia 12 raises the supported test-framework baselines to xUnit `3` and NUnit `4`; see [`68-avalonia-12-migration-guide.md`](68-avalonia-12-migration-guide) when migrating packages and adapters.
+
 ## Test Runtime Architecture
 
 Headless test pipeline:

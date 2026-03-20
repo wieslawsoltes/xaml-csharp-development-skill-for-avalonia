@@ -23,15 +23,15 @@ This skill is currently pinned to Avalonia **11.3.12**.
 
 This repository also now carries a dedicated Avalonia 12 migration lane:
 
-- latest verified Avalonia 12 tag on origin matching `12.0.0*`: **`12.0.0-rc1`**
+- official docs-page review date for the lane: **March 20, 2026**
+- latest verified Avalonia 12 tag on origin matching `12.0.0*` as of **March 20, 2026**: **`12.0.0-rc1`**
 - GitHub release date of that tag: **March 19, 2026**
-- verification date for this lane: **March 19, 2026**
 - curated migration chapter: [`references/68-avalonia-12-migration-guide.md`](references/68-avalonia-12-migration-guide)
-- generated break/new API catalog: [`references/69-avalonia-12-breaking-changes-and-new-api-catalog.md`](references/69-avalonia-12-breaking-changes-and-new-api-catalog)
-- generated RC1 API index: [`references/api-index-12.0.0-rc1-generated.md`](references/api-index-12.0.0-rc1-generated)
-- official upstream Avalonia release and breaking-change docs are referenced from the migration guide, including the `v12 Breaking Changes` wiki page
+- generated break/new API catalog for the latest published tag: [`references/69-avalonia-12-breaking-changes-and-new-api-catalog.md`](references/69-avalonia-12-breaking-changes-and-new-api-catalog)
+- generated Avalonia 12 API index for the latest published tag: [`references/api-index-12.0.0-rc1-generated.md`](references/api-index-12.0.0-rc1-generated)
+- official upstream release and breaking-change docs are referenced from the migration guide, including the current docs page and the older wiki pages
 
-As of **March 19, 2026**, this repository is maintained against the 11.3.12 release line plus the Avalonia 12 RC1 migration lane.
+As of **March 20, 2026**, this repository is maintained against the 11.3.12 release line plus an Avalonia 12 migration lane that uses the current official breaking-changes docs page together with source-backed `12.0.0-rc1` generated artifacts.
 
 ## Scope
 
@@ -46,7 +46,7 @@ This skill covers app-development-facing Avalonia topics, including:
 - Controls, templates, input/focus, layout, rendering, and animation
 - Platform services (storage provider, clipboard, launcher, drag/drop, screens)
 - Diagnostics, performance, testing, accessibility, and troubleshooting
-- Avalonia 12 RC1 migration planning and execution, while keeping stable defaults on 11.3.12
+- Avalonia 12 migration planning and execution, while keeping stable defaults on 11.3.12
 
 It includes both curated guidance and a generated API index for signature lookup.
 
@@ -71,7 +71,7 @@ When internals are mentioned, it is usually for diagnostics, constraints, or beh
 - [`references/api-index-generated.md`](references/api-index-generated)
   - Broad generated API signature index
 - [`references/api-index-12.0.0-rc1-generated.md`](references/api-index-12.0.0-rc1-generated)
-  - Avalonia 12 RC1 generated API signature index
+  - Avalonia 12 generated API signature index for the latest published `12.0.0*` tag currently tracked in this repo (`12.0.0-rc1`)
 - `scripts/generate_api_index.py`
   - API index generator script
 - `scripts/generate_api_migration_report.py`
@@ -221,12 +221,13 @@ Recent additions include focused references for:
   - integration and dynamic-UI migration (titlebar/system backdrop, runtime XAML loading/resource packaging, WebView2 boundaries, `ItemsView`/`LayoutPanel` strategies),
   - low-level framework migration (property type/metadata/precedence mapping, visual/logical tree traversal, NameScope/template-part contracts, selector/resource/theme resolution internals),
   - API-coverage manifest linking WinUI source checkpoints and online API docs to Avalonia lookup references.
-- Avalonia 12 migration lane (`references/68-avalonia-12-migration-guide.md`) backed by generated sources:
-  - latest lane verification pinned to `12.0.0-rc1` as of March 19, 2026,
+- Avalonia 12 migration lane (`references/68-avalonia-12-migration-guide.md`) backed by current upstream docs plus generated sources:
+  - official docs page reviewed on March 20, 2026,
+  - latest published Avalonia `12.0.0*` tag still `12.0.0-rc1` as of March 20, 2026,
   - official breaking changes and added APIs from source-backed generation (`references/69-avalonia-12-breaking-changes-and-new-api-catalog.md`),
-  - full RC1 public-signature lookup (`references/api-index-12.0.0-rc1-generated.md`),
-  - official upstream release and wiki references folded into the guide, including the `v12 Breaking Changes` page,
-  - migration guidance for binding moves, compiled-binding defaults, storage-provider and data-transfer migration, `PseudolassesExtensions` to `PseudoClassesExtensions`, Android bootstrap changes, modern window decorations, focus/input contract changes, `SwipeGestureRecognizer` reshaping, `DrawerPage.DrawerBreakpointWidth` to `DrawerBreakpointLength`, and major Avalonia 12 APIs such as page navigation, command bars, `PipsPager`, `TextOptions`, `CompiledBinding.Create`, and `IPresentationSource`.
+  - public-signature lookup for the latest published Avalonia 12 tag tracked here (`references/api-index-12.0.0-rc1-generated.md`),
+  - official upstream docs and older wiki references folded into the guide,
+  - migration guidance for runtime baseline changes, diagnostics package replacement, explicit HarfBuzz wiring when `UseSkia()` is configured directly, binding hierarchy changes, compiled-binding defaults, storage-provider and data-transfer migration, Android bootstrap changes, modern window decorations, gesture/event relocation, multiple-dispatcher guidance, and retained source-backed RC1 deltas such as focus-manager, swipe, drawer, and page-lifecycle changes.
 
 These are designed to reduce accidental drift to unreleased APIs.
 

@@ -49,8 +49,9 @@ Core app-level diagnostics in this codebase:
 - Layout lifecycle observation via `LayoutUpdated` and viewport events.
 
 Note on DevTools:
-- Runtime `AttachDevTools()` implementation is provided by `Avalonia.Diagnostics` package (outside this repository tree).
+- Runtime `AttachDevTools()` implementation on the stable `11.3.12` line is provided by the `Avalonia.Diagnostics` package (outside this repository tree).
 - This repository includes generator-side hooks that emit optional `attachDevTools` wiring when that package is referenced.
+- Avalonia 12 migration note: `Avalonia.Diagnostics` is removed; use `AvaloniaUI.DiagnosticsSupport` and `AttachDeveloperTools()`. See [`68-avalonia-12-migration-guide.md`](68-avalonia-12-migration-guide).
 
 ## Authoring Patterns
 
@@ -126,6 +127,7 @@ myControl.LayoutUpdated += (_, _) =>
 
 4. DevTools attach call missing in generated code:
 - `Avalonia.Diagnostics` package not referenced.
+- On Avalonia 12, verify that the project moved to `AvaloniaUI.DiagnosticsSupport` and `AttachDeveloperTools()`.
 - Generator option disabled for devtools attachment.
 
 ## XAML-First and Code-Only Usage

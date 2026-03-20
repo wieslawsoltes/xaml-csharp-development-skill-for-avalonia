@@ -128,8 +128,8 @@ Primary entry for the full reference set:
 16. For Avalonia 12 migration work, use the dedicated Avalonia 12 lane.
 - Read `references/68-avalonia-12-migration-guide.md`.
 - Use `references/69-avalonia-12-breaking-changes-and-new-api-catalog.md` for the exhaustive breaking-change and new-API inventory.
-- Use `references/api-index-12.0.0-rc1-generated.md` for `12.0.0-rc1` signature lookup.
-- Cross-check the official upstream release and breaking-change docs linked from `references/68-avalonia-12-migration-guide.md`, especially the `v12 Breaking Changes` wiki page.
+- Use `references/api-index-12.0.0-rc1-generated.md` for signature lookup against the latest published `12.0.0*` tag currently tracked in this repo.
+- Cross-check the official upstream release and breaking-change docs linked from `references/68-avalonia-12-migration-guide.md`, starting with the current docs page and using the older wiki pages only as supplemental history.
 - Keep default implementation guidance pinned to `11.3.12` unless the task explicitly targets the Avalonia 12 lane.
 
 ## Public API Coverage

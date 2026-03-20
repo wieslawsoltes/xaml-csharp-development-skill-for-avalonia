@@ -4,8 +4,8 @@
 - References scanned: `references`
 - Reference docs scanned: `431`
 - API signatures parsed: `9895`
-- Covered APIs: `5508`
-- Not covered APIs: `4387`
+- Covered APIs: `5528`
+- Not covered APIs: `4367`
 
 ## Not Covered API Signatures
 
@@ -27,14 +27,11 @@
 - `public void OnBackInvoked() {`
 
 ### `src/Android/Avalonia.Android/AvaloniaView.Input.cs`
-- `public partial class AvaloniaView : IInitEditorInfo`
 - `public override IInputConnection OnCreateInputConnection(EditorInfo? outAttrs) {`
 - `public override bool DispatchTouchEvent(MotionEvent? e) {`
 - `public override bool DispatchKeyEvent(KeyEvent? e) {`
 
 ### `src/Android/Avalonia.Android/AvaloniaView.cs`
-- `public partial class AvaloniaView : FrameLayout`
-- `public AvaloniaView(Context context) : base(context) {`
 - `public override void OnVisibilityAggregated(bool isVisible) {`
 
 ### `src/Android/Avalonia.Android/IActivityResultHandler.cs`
@@ -445,9 +442,6 @@
 - `public ResourceProvider() {`
 - `public ResourceProvider(IResourceHost owner) {`
 
-### `src/Avalonia.Base/Controls/ResourcesChangedEventArgs.cs`
-- `public class ResourcesChangedEventArgs : EventArgs`
-
 ### `src/Avalonia.Base/Controls/Templates/ITemplateResult.cs`
 - `public interface ITemplateResult`
 
@@ -713,10 +707,6 @@
 - `public static void RemoveScrollGestureEndedHandler(Interactive element,EventHandler<ScrollGestureEndedEventArgs> handler) =>`
 - `public static void RemoveScrollGestureInertiaStartingHandler(Interactive element, EventHandler<ScrollGestureInertiaStartingEventArgs> handler) =>`
 
-### `src/Avalonia.Base/Input/GotFocusEventArgs.cs`
-- `public class GotFocusEventArgs : RoutedEventArgs`
-- `public GotFocusEventArgs() : base(InputElement.GotFocusEvent) {`
-
 ### `src/Avalonia.Base/Input/IAsyncDataTransferItem.cs`
 - `public interface IAsyncDataTransferItem`
 
@@ -767,8 +757,6 @@
 - `public static readonly RoutedEvent<PointerEventArgs> PointerEnteredEvent = RoutedEvent.Register<InputElement, PointerEventArgs>( nameof(PointerEntered), RoutingStrategies.Direct);`
 - `public static readonly RoutedEvent<PointerEventArgs> PointerExitedEvent = RoutedEvent.Register<InputElement, PointerEventArgs>( nameof(PointerExited), RoutingStrategies.Direct);`
 - `public static readonly RoutedEvent<PointerCaptureLostEventArgs> PointerCaptureLostEvent = RoutedEvent.Register<InputElement, PointerCaptureLostEventArgs>( nameof(PointerCaptureLost), RoutingStrategies.Direct);`
-- `public event EventHandler<GotFocusEventArgs>? GotFocus {`
-- `public event EventHandler<RoutedEventArgs>? LostFocus {`
 - `public event EventHandler<KeyEventArgs>? KeyUp {`
 - `public event EventHandler<TextInputMethodClientRequestedEventArgs>? TextInputMethodClientRequested {`
 - `public event EventHandler<PointerCaptureLostEventArgs>? PointerCaptureLost {`
@@ -942,7 +930,6 @@
 
 ### `src/Avalonia.Base/Input/PointerDeltaEventArgs.cs`
 - `public class PointerDeltaEventArgs : PointerEventArgs`
-- `public Vector Delta { get; }`
 - `public PointerDeltaEventArgs(RoutedEvent routedEvent, object? source, IPointer pointer, Visual rootVisual, Point rootVisualPosition, ulong timestamp, PointerPointProperties properties, KeyModifiers modifiers, Vector delta) : base(routedEvent, source, pointer, rootVisual, rootVisualPosition, timestamp, properties, modifiers) {`
 
 ### `src/Avalonia.Base/Input/PointerEventArgs.cs`
@@ -980,13 +967,11 @@
 
 ### `src/Avalonia.Base/Input/PointerWheelEventArgs.cs`
 - `public class PointerWheelEventArgs : PointerEventArgs`
-- `public Vector Delta { get; }`
 - `public PointerWheelEventArgs(object source, IPointer pointer, Visual rootVisual, Point rootVisualPosition, ulong timestamp, PointerPointProperties properties, KeyModifiers modifiers, Vector delta) : base(InputElement.PointerWheelChangedEvent, source, pointer, rootVisual, rootVisualPosition, timestamp, properties, modifiers) {`
 
 ### `src/Avalonia.Base/Input/PullGestureEventArgs.cs`
 - `public class PullGestureEventArgs : RoutedEventArgs`
 - `public int Id { get; }`
-- `public Vector Delta { get; }`
 - `public PullGestureEventArgs(int id, Vector delta, PullDirection pullDirection) : base(Gestures.PullGestureEvent) {`
 - `public class PullGestureEndedEventArgs : RoutedEventArgs`
 - `public PullGestureEndedEventArgs(int id, PullDirection pullDirection) : base(Gestures.PullGestureEndedEvent) {`
@@ -1021,7 +1006,6 @@
 ### `src/Avalonia.Base/Input/Raw/RawMouseWheelEventArgs.cs`
 - `public class RawMouseWheelEventArgs : RawPointerEventArgs`
 - `public RawMouseWheelEventArgs( IInputDevice device, ulong timestamp, IInputRoot root, Point position, Vector delta, RawInputModifiers inputModifiers) : base(device, timestamp, root, RawPointerEventType.Wheel, position, inputModifiers) {`
-- `public Vector Delta { get; private set; }`
 
 ### `src/Avalonia.Base/Input/Raw/RawPointerEventArgs.cs`
 - `public enum RawPointerEventType`
@@ -1043,7 +1027,6 @@
 ### `src/Avalonia.Base/Input/Raw/RawPointerGestureEventArgs.cs`
 - `public class RawPointerGestureEventArgs : RawPointerEventArgs`
 - `public RawPointerGestureEventArgs( IInputDevice device, ulong timestamp, IInputRoot root, RawPointerEventType gestureType, Point position, Vector delta, RawInputModifiers inputModifiers) : base(device, timestamp, root, gestureType, position, inputModifiers) {`
-- `public Vector Delta { get; private set; }`
 
 ### `src/Avalonia.Base/Input/Raw/RawSizeEventArgs.cs`
 - `public class RawSizeEventArgs : EventArgs`
@@ -1062,7 +1045,6 @@
 ### `src/Avalonia.Base/Input/ScrollGestureEventArgs.cs`
 - `public class ScrollGestureEventArgs : RoutedEventArgs`
 - `public int Id { get; }`
-- `public Vector Delta { get; }`
 - `public bool ShouldEndScrollGesture { get; set; }`
 - `public static int GetNextFreeId() => _nextId++;`
 - `public ScrollGestureEventArgs(int id, Vector delta) : base(Gestures.ScrollGestureEvent) {`
@@ -2146,8 +2128,10 @@
 - `public override Geometry Clone() => new RectangleGeometry(Rect, RadiusX, RadiusY);`
 
 ### `src/Avalonia.Base/Media/RenderOptions.cs`
+- `public readonly record struct RenderOptions`
 - `public BitmapInterpolationMode BitmapInterpolationMode { get; init; }`
 - `public EdgeMode EdgeMode { get; init; }`
+- `public TextRenderingMode TextRenderingMode { get; init; }`
 - `public bool? RequiresFullOpacityHandling { get; init; }`
 - `public static BitmapInterpolationMode GetBitmapInterpolationMode(Visual visual) {`
 - `public static void SetBitmapInterpolationMode(Visual visual, BitmapInterpolationMode value) {`
@@ -2557,6 +2541,9 @@
 - `public sealed class TextPathSegmentTrimming : TextTrimming`
 - `public TextPathSegmentTrimming(string ellipsis) {`
 - `public override TextCollapsingProperties CreateCollapsingProperties(TextCollapsingCreateInfo createInfo) {`
+
+### `src/Avalonia.Base/Media/TextRenderingMode.cs`
+- `public enum TextRenderingMode : byte`
 
 ### `src/Avalonia.Base/Media/TextTrailingTrimming.cs`
 - `public sealed class TextTrailingTrimming : TextTrimming`
@@ -4221,7 +4208,6 @@
 - `public virtual Point PointToClient(PixelPoint point) => point.ToPoint(1);`
 - `public virtual PixelPoint PointToScreen(Point point) => PixelPoint.FromPoint(point, 1);`
 - `public virtual void SetCursor(ICursorImpl? cursor) {`
-- `public Action? LostFocus { get; set; }`
 - `public abstract IMouseDevice MouseDevice { get; }`
 - `public void SetTransparencyLevelHint(IReadOnlyList<WindowTransparencyLevel> transparencyLevel) { }`
 - `public WindowTransparencyLevel TransparencyLevel => WindowTransparencyLevel.None;`
@@ -4720,7 +4706,6 @@
 - `public class SelectionModelIndexesChangedEventArgs : EventArgs`
 - `public SelectionModelIndexesChangedEventArgs(int startIndex, int delta) {`
 - `public int StartIndex { get; }`
-- `public int Delta { get; }`
 
 ### `src/Avalonia.Controls/Selection/SelectionModelSelectionChangedEventArgs.cs`
 - `public abstract class SelectionModelSelectionChangedEventArgs : EventArgs`
@@ -5720,18 +5705,9 @@
 - `public double ScaleFactor {`
 - `public void ProcessInteractiveResize(PixelSize size) {`
 
-### `src/Browser/Avalonia.Browser.Blazor/AvaloniaView.cs`
-- `public class AvaloniaView : ComponentBase`
-- `public AvaloniaView() {`
-
 ### `src/Browser/Avalonia.Browser.Blazor/BlazorSingleViewLifetime.cs`
 - `public static class BlazorAppBuilder`
 - `public static async Task StartBlazorAppAsync(this AppBuilder builder, BrowserPlatformOptions? options = null) {`
-
-### `src/Browser/Avalonia.Browser/AvaloniaView.cs`
-- `public class AvaloniaView`
-- `public AvaloniaView(string divId) : this(DomHelper.GetElementById(divId, BrowserWindowingPlatform.GlobalThis) ?? throw new Exception($"Element with id '{divId}' was not found in the html document."))`
-- `public AvaloniaView(JSObject host) {`
 
 ### `src/Browser/Avalonia.Browser/JSObjectControlHandle.cs`
 - `public class JSObjectPlatformHandle : PlatformHandle`
@@ -6018,6 +5994,10 @@
 - `public static void ApplyNonMatchingMarkupExtensionV1(object target, object property, IServiceProvider prov, object value) {`
 - `public static IServiceProvider CreateInnerServiceProviderV1(IServiceProvider compiled) => new InnerServiceProvider(compiled);`
 
+### `src/Markup/Avalonia.Markup.Xaml/XamlTypes.cs`
+- `public sealed class ConstructorArgumentAttribute : Attribute`
+- `public ConstructorArgumentAttribute(string name) {`
+
 ### `src/Markup/Avalonia.Markup/Data/BindingBase.cs`
 - `public WeakReference? DefaultAnchor { get; set; }`
 
@@ -6144,20 +6124,16 @@
 - `public static unsafe string? GetKeySymbol(int virtualKey, int keyData) {`
 
 ### `src/iOS/Avalonia.iOS/AvaloniaAppDelegate.cs`
-- `public class AvaloniaAppDelegate<TApp> : UIResponder, IUIApplicationDelegate, IAvaloniaAppDelegate`
 - `public AvaloniaAppDelegate() {`
 - `public bool FinishedLaunching(UIApplication application, NSDictionary launchOptions) {`
 - `public bool OpenUrl(UIApplication app, NSUrl url, NSDictionary options) {`
 - `public bool ContinueUserActivity(UIApplication application, NSUserActivity userActivity, UIApplicationRestorationHandler completionHandler) {`
 
 ### `src/iOS/Avalonia.iOS/AvaloniaView.Text.cs`
-- `public partial class AvaloniaView`
 - `public override bool BecomeFirstResponder() {`
 - `public override bool ResignFirstResponder() {`
 
 ### `src/iOS/Avalonia.iOS/AvaloniaView.cs`
-- `public partial class AvaloniaView : UIView, ITextInputMethodImpl`
-- `public AvaloniaView() {`
 - `public override bool CanBecomeFirstResponder => true;`
 - `public override bool CanResignFirstResponder => true;`
 - `public override void TraitCollectionDidChange(UITraitCollection? previousTraitCollection) {`

@@ -51,6 +51,10 @@ Reference source files:
 - `src/Avalonia.Base/Input/KeyEventArgs.cs`
 - `src/Avalonia.Base/Input/Gestures.cs`
 
+Version note:
+- this stable reference reflects the `11.3.12` public input surface,
+- for Avalonia 12 migration, see [`68-avalonia-12-migration-guide.md`](68-avalonia-12-migration-guide) because public gesture events move off the `Gestures` class onto `InputElement`, and touch/pen selection behavior changes.
+
 ## Input and Routing Flow
 
 Runtime flow in app code:
@@ -218,7 +222,8 @@ void OnPointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)
 - Use `Tunnel` only for pre-filtering and guard logic.
 - Avoid global handlers with `handledEventsToo: true` unless truly required.
 - Prefer typed `AddHandler<TEventArgs>` overloads for maintainability.
-- For gesture-heavy controls, use `Gestures` events instead of reimplementing recognizers.
+- For gesture-heavy controls, use built-in gesture events/recognizers instead of reimplementing them.
+- On `11.3.12`, that usually means the public `Gestures` surface; on Avalonia 12, the public routed events move to `InputElement`.
 - In tests, prefer headless input simulation APIs over directly constructing pointer/key event args.
 
 ## Troubleshooting

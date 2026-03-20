@@ -123,6 +123,7 @@ Guidance:
 
 - prefer `await op.GetTask()` in async flows,
 - use `Wait()` only for narrow synchronous boundaries.
+- Avalonia 12 migration note: app code can still use `Dispatcher.UIThread`, but library and control code should prefer `AvaloniaObject.Dispatcher` or `Dispatcher.CurrentDispatcher` for multi-dispatcher awareness. See [`68-avalonia-12-migration-guide.md`](68-avalonia-12-migration-guide).
 
 ## Priority Awaitables
 

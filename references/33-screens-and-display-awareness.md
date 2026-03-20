@@ -42,6 +42,7 @@ Model notes:
 - `WorkingArea` may differ from `Bounds` due to taskbars/notches.
 - `Scaling` is per-display and relevant for pixel calculations.
 - Some methods return null on mobile-like platforms for unsupported queries.
+- On the Avalonia 12 line, `Screen` is abstract; always obtain screen instances from `Screens`.
 
 ## Monitor-Aware Patterns
 

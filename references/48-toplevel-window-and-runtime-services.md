@@ -34,6 +34,10 @@ Service entry points exposed by `TopLevel`:
 - `FocusManager`
 - `PlatformSettings`
 
+Version note:
+- this stable reference reflects the `11.3.12` `TopLevel` surface,
+- for Avalonia 12 migration, see [`68-avalonia-12-migration-guide.md`](68-avalonia-12-migration-guide) because `TopLevel` is no longer guaranteed to be the visual root, `IPresentationSource` becomes part of the public host model, and some older root-service assumptions no longer hold.
+
 ## `TopLevel` Runtime Services Surface
 
 Use `TopLevel.GetTopLevel(visual)` at runtime, then consume host services from that surface.

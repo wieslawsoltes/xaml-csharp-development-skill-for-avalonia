@@ -2,392 +2,354 @@
 
 ## Table of Contents
 1. Scope and Status
-2. Coverage Contract
-3. Package and Toolchain Changes
+2. Source Priority for This Lane
+3. Upgrade Baseline First
 4. Breaking Changes to Fix First
-5. RC1 Delta If You Already Started from Preview2
-6. Behavior Changes to Re-verify
-7. Major New APIs in Avalonia 12
-8. Migration Workflow
-9. Code Migration Examples
-10. AOT and Trimming Notes
-11. Troubleshooting
-12. Full Reference Pointers
+5. Behavior Changes to Re-verify
+6. Platform-Specific Migration Notes
+7. Additional Source-Backed Deltas Worth Keeping
+8. Code Migration Examples
+9. AOT, Trimming, and Build Notes
+10. Troubleshooting
+11. Full Reference Pointers
 
 ## Scope and Status
 
-This lane extends the skill with migration guidance for Avalonia 12 while keeping the rest of the repository pinned to Avalonia `11.3.12`.
+This lane extends the skill with Avalonia 12 migration guidance while keeping the rest of the repository pinned to Avalonia `11.3.12`.
 
 Current status for this guide:
 
-- verified against the local Avalonia repo and GitHub origin tags on **March 19, 2026**,
-- latest published `12.0.0*` tag at that point: **`12.0.0-rc1`**,
+- official breaking-change docs page reviewed on **March 20, 2026**: [Breaking changes in Avalonia 12](https://docs.avaloniaui.net/docs/avalonia12-breaking-changes),
+- Avalonia origin tags reviewed on **March 20, 2026**,
+- latest published `12.0.0*` tag on origin at that point: **`12.0.0-rc1`**,
 - GitHub release date of `12.0.0-rc1`: **March 19, 2026**,
-- previous repo migration baseline before this refresh: **`12.0.0-preview2`**, released on **March 5, 2026**.
+- generated companion artifacts in this repository therefore still target **`12.0.0-rc1`**.
 
-Use this guide when you are actively porting an application, library, or samples from `11.3.12` to `12.0.0-rc1`, or when you already started on `12.0.0-preview2` and need to absorb the RC1 deltas. Keep using the stable references for day-to-day app-building decisions unless the task explicitly targets the Avalonia 12 lane.
+Use this guide when you are porting an application, library, or samples from `11.3.12` toward Avalonia 12. The curated guidance below follows the current official Avalonia 12 docs page, while the generated API index and generated migration report in this repo remain source-backed against `12.0.0-rc1` until a newer Avalonia 12 tag exists upstream.
 
-## Coverage Contract
+## Source Priority for This Lane
 
-This guide is the curated migration chapter. Exhaustive coverage for the Avalonia 12 lane comes from the generated companion references:
+Use sources in this order for Avalonia 12 migration work:
 
-- official breaking changes and added APIs: [`69-avalonia-12-breaking-changes-and-new-api-catalog.md`](69-avalonia-12-breaking-changes-and-new-api-catalog),
-- `12.0.0-rc1` public API index: [`api-index-12.0.0-rc1-generated.md`](api-index-12.0.0-rc1-generated).
-
-Official upstream sources cross-checked for this guide:
-
-- [Avalonia release: 12.0.0-rc1](https://github.com/AvaloniaUI/Avalonia/releases/tag/12.0.0-rc1),
-- [Avalonia wiki: v12 Breaking Changes](https://github.com/AvaloniaUI/Avalonia/wiki/v12-Breaking-Changes),
-- [Avalonia wiki: Breaking Changes](https://github.com/AvaloniaUI/Avalonia/wiki/Breaking-Changes).
+1. the official docs page: [Breaking changes in Avalonia 12](https://docs.avaloniaui.net/docs/avalonia12-breaking-changes),
+2. the latest published Avalonia 12 tag on GitHub Releases,
+3. this repository's generated companion references:
+   - [`69-avalonia-12-breaking-changes-and-new-api-catalog.md`](69-avalonia-12-breaking-changes-and-new-api-catalog),
+   - [`api-index-12.0.0-rc1-generated.md`](api-index-12.0.0-rc1-generated),
+4. older Avalonia wiki pages as historical background only when they still add detail not present on the docs page.
 
 Current generated evidence for this lane:
 
 - `11.3.12 -> 12.0.0-rc1`: `591` approved compatibility suppressions and `1175` added public signatures,
-- `12.0.0-preview2 -> 12.0.0-rc1`: `168` added public signatures and `73` removed public signatures in the parser view, on top of the same suppression-backed compatibility inventory.
+- `12.0.0-preview2 -> 12.0.0-rc1`: `168` added public signatures and `73` removed public signatures in the parser view.
 
 Coverage intent:
 
-- public API additions are exhaustively indexed through the generated RC1 API index,
-- approved breaking changes are exhaustively listed from Avalonia's checked-in package-validation suppressions,
-- this guide folds in the user-facing upstream release and wiki notes that are easy to miss in raw API diff output,
-- this guide focuses on app-development migrations, sequencing, examples, and the highest-risk behavior changes.
+- the official docs page is treated as the authoritative user-facing migration checklist,
+- the generated report remains the exhaustive source-backed inventory for the latest published Avalonia 12 tag,
+- this guide focuses on sequencing, high-risk changes, and app-development-oriented examples.
 
-## Package and Toolchain Changes
+## Upgrade Baseline First
 
-Start here before touching view code.
+Handle these before you start fixing individual compile errors.
 
-- `Avalonia` no longer targets `netstandard2.0`; the package project in `12.0.0-rc1` targets the current line plus `net8.0`.
-- the previewer tool path moved to `tools/net8.0/designer/Avalonia.Designer.HostApp.dll`; the `.NET Framework` previewer executable path is gone.
-- `AvaloniaUseCompiledBindingsByDefault` now defaults to `true` in `packages/Avalonia/Avalonia.props`.
-- Android minimum supported version moved from `21.0` to `24.0`, and the current build line uses `net10.0-android36.0`.
-- the upstream repo no longer contains the old `Avalonia.Browser.Blazor`, `Avalonia.Tizen`, or in-repo `Avalonia.ReactiveUI` projects from the `11.3.12` tree.
+### 1. Move the runtime baseline
 
-Practical do/don't:
+- Avalonia 12 drops `.NET Framework` and `.NET Standard`.
+- supported runtime line is `.NET 8+`,
+- the official docs page recommends `.NET 10`,
+- Android and iOS now require `.NET 10`.
 
-- do upgrade your app target frameworks and CI images before you start fixing API errors.
-- do audit any project that depended on implicit reflection bindings; Avalonia 12 compiles more aggressively by default.
-- don't treat this as a pure namespace rename upgrade; several platform, input, dialog, and hosting APIs changed shape.
+Practical rule:
+
+- upgrade target frameworks, SDKs, CI images, and mobile workloads first.
+
+### 2. Upgrade all Avalonia packages together
+
+The official docs page is written for the Avalonia 12 release line, not a mixed-package upgrade.
+
+Practical rule:
+
+- move all `Avalonia*` package references together,
+- if you are using this repository's generated artifacts for symbol lookup, remember they are still anchored to `12.0.0-rc1` as of **March 20, 2026**.
+
+### 3. Replace legacy DevTools packaging
+
+The docs page now treats this as a first-class breaking change:
+
+- `Avalonia.Diagnostics` is removed,
+- use `AvaloniaUI.DiagnosticsSupport`,
+- rename `AttachDevTools()` to `AttachDeveloperTools()`.
+
+### 4. Expect compiled bindings by default
+
+`<AvaloniaUseCompiledBindingsByDefault>` now defaults to `true`.
+
+Practical rule:
+
+- add `x:DataType`,
+- fix binding compile failures early,
+- use `{ReflectionBinding ...}` only for real dynamic cases.
+
+### 5. Re-check custom startup when you call `UseSkia()` directly
+
+The text shaper is now configured independently from the renderer.
+
+Practical rule:
+
+- `UsePlatformDetect()` still gives you the standard text setup,
+- if you explicitly configure Skia with `.UseSkia()`, add `.UseHarfBuzz()` and reference `Avalonia.HarfBuzz`.
+
+### 6. Remove packages that no longer exist in Avalonia 12
+
+The official docs page calls out these removals:
+
+- `Avalonia.Direct2D1`,
+- `Avalonia.Browser.Blazor`,
+- `Avalonia.Tizen`,
+- `Avalonia.Diagnostics`.
 
 ## Breaking Changes to Fix First
 
-These changes usually block the first successful build or require immediate code edits.
+These are the migration steps most likely to block the first successful build.
 
-### 1. Binding and metadata types moved
+### 1. Binding hierarchy and code-only binding APIs changed
 
-Several binding-facing APIs now live in `Avalonia.Base` / `Avalonia.Data` / `Avalonia.Metadata` instead of their old markup-specific locations.
+The docs page and generated diff agree on the core binding break:
 
-Common moves:
-
-- `BindingBase`
-- `CompiledBinding`
-- `CompiledBindingPath`
-- `ReflectionBinding`
-- `RelativeSource`
-- `ConstructorArgumentAttribute`
+- `IBinding` is removed; use `BindingBase`,
+- `Binding` remains only as the compatibility reflection-binding shape,
+- `InstancedBinding` is removed; use `BindingExpressionBase`,
+- C# binding construction should use `ReflectionBinding` and `CompiledBinding` directly,
+- old `(path, mode)` constructor overloads are gone; set `Mode` and other options explicitly.
 
 Migration rule:
 
 - fix `using` directives first,
 - then fix code-only binding construction,
-- then rebuild to catch any remaining path or converter issues.
+- then rebuild to catch remaining binding-path issues.
 
-### 2. `Binding` and `ReflectionBinding` constructor overloads were removed
+### 2. Binding plugins are gone, and data-annotations validation is no longer implicitly on
 
-`Binding(string, BindingMode)` and `ReflectionBinding(string, BindingMode)` are gone.
-
-Migration rule:
-
-- construct the binding with the path,
-- then set `Mode`, `UpdateSourceTrigger`, `Delay`, and other options explicitly.
-
-### 3. Compiled bindings are now the default
-
-If a view relied on implicit reflection binding behavior, Avalonia 12 can start surfacing XAML compile errors or different binding resolution.
-
-Migration rule:
-
-- add `x:DataType`,
-- use `{CompiledBinding ...}` for typed bindings,
-- opt out per binding with `{ReflectionBinding ...}` when you really need dynamic lookup,
-- only set `<AvaloniaUseCompiledBindingsByDefault>false</AvaloniaUseCompiledBindingsByDefault>` as a temporary migration escape hatch.
-
-### 4. Data annotations validation is no longer implicit
-
-Avalonia hid the validation plugins and stopped enabling data annotations validation by default.
+Avalonia 12 removes configurable binding plugins and disables the data-annotations plugin by default.
 
 Migration rule:
 
 - if your forms depended on `System.ComponentModel.DataAnnotations`, opt back in with `AppBuilder.WithDataAnnotationsValidation()`,
-- otherwise validation attributes may stop producing UI errors even though the project still compiles.
+- remove plugin customization code,
+- remove `UpdateDataValidation(...)` overrides that only forwarded errors via `DataValidationErrors.SetError(...)`.
 
-### 5. Legacy dialog types are gone from the public surface
+### 3. Clipboard and drag/drop code must move off `IDataObject`
 
-The suppression-backed break list includes:
+The docs page is explicit here:
 
-- `OpenFileDialog`
-- `OpenFolderDialog`
-- `SaveFileDialog`
-- related system-dialog types
-
-Migration rule:
-
-- move dialog flows to `TopLevel.StorageProvider` and the picker option types from the storage-provider stack,
-- use the stable storage guidance in [`29-storage-provider-and-file-pickers.md`](29-storage-provider-and-file-pickers).
-
-### 6. Data transfer APIs moved away from `IDataObject`
-
-Avalonia 12 exposes `IDataTransfer`, `IAsyncDataTransfer`, `DataTransfer`, and `DataTransferItem` as the public drag/drop and clipboard model.
+- `IDataObject` is removed,
+- `DataObject` no longer carries the old behavior,
+- `IClipboard` now favors typed extension helpers,
+- drag/drop and clipboard payloads move to `IDataTransfer` / `IAsyncDataTransfer` / `DataTransfer` / `DataTransferItem`.
 
 Migration rule:
 
-- replace `IDataObject`-shaped code with `IDataTransfer`/`IAsyncDataTransfer`,
-- use the new typed helpers such as `TryGetText`, `TryGetFiles`, `TryGetTextAsync`, and `TryGetBitmapAsync`.
+- replace `DataFormats.*` with `DataFormat.*`,
+- replace `SetDataObjectAsync(...)` with `SetDataAsync(...)`,
+- replace `GetTextAsync()` with `TryGetTextAsync()` and similar typed helpers,
+- move drag/drop code to `DragDrop.DoDragDropAsync(...)` and `DragEventArgs.DataTransfer`.
+- keep the Avalonia 11 dialog removals in view as well: `OpenFileDialog`, `OpenFolderDialog`, `SaveFileDialog`, and related legacy dialog types stay removed on the Avalonia 12 line,
+- move picker flows to `TopLevel.StorageProvider` and the `FilePicker*Options` types.
 
-### 7. Window chrome was renamed and reworked
+### 4. `TopLevel` can no longer be treated as "the visual root plus every root service"
 
-`SystemDecorations` became `WindowDecorations`, and custom drawn decorations gained a new role model for hit testing and themed client chrome.
+Avalonia 12 changes the root-host model:
+
+- a `TopLevel` is not guaranteed to be the root `Visual`,
+- removed public root interfaces include `IInputRoot`, `ILayoutRoot`, `IRenderRoot`, and related shapes,
+- `IPresentationSource` is now part of the public host model,
+- `VisualExtensions.GetVisualRoot()` is not the migration-safe path for this scenario anymore.
+
+Migration rule:
+
+- use `TopLevel.GetTopLevel(visual)` to reach window/runtime services,
+- use `GetPresentationSource(...)` when you need the host/root bridge,
+- stop depending on removed root-interface contracts.
+
+### 5. Window decorations were renamed and reworked
+
+This is one of the most visible app-facing breaks:
+
+- `SystemDecorations` became `WindowDecorations`,
+- `Window.ExtendClientAreaChromeHints` was removed,
+- `TitleBar`, `CaptionButtons`, and `ChromeOverlayLayer` were removed,
+- `WindowDrawnDecorations` is the replacement managed-decoration surface.
 
 Migration rule:
 
 - rename `SystemDecorations` property usage to `WindowDecorations`,
-- rename platform-impl calls from `SetSystemDecorations(...)` to `SetWindowDecorations(...)`,
-- when building custom title bars or resize grips, use `Avalonia.Controls.Chrome.WindowDecorationProperties.ElementRole`.
+- keep `ExtendClientAreaToDecorationsHint`,
+- stop building new code around `ExtendClientAreaChromeHints`,
+- use `WindowDecorationProperties.ElementRole` and `WindowDrawnDecorations`-based patterns for custom chrome.
 
-### 8. `PseudolassesExtensions` was renamed to `PseudoClassesExtensions`
+### 6. Input, selection, gesture, and access-key behavior changed
 
-The official upstream `v12 Breaking Changes` wiki calls out the typo fix from `PseudolassesExtensions` to `PseudoClassesExtensions`.
+Important official docs-page changes:
 
-Migration rule:
-
-- update any direct type references, `using static` imports, analyzers, source generators, or reflection-based lookups that still reference `PseudolassesExtensions`,
-- if your code only calls the extension method through instance-style syntax on `PseudoClasses`, this rename may not require source edits.
-
-### 9. `TopLevel` is no longer the public catch-all root interface
-
-`TopLevel` no longer publicly carries all of the `IInputRoot` / `ILayoutRoot` / `IRenderRoot` responsibilities directly. Avalonia 12 introduces `IPresentationSource` and a deeper root split.
+- touch and pen selection now trigger on pointer release,
+- container types now handle selection input directly,
+- override `ShouldTriggerSelection(...)` and `UpdateSelectionFromEvent(...)` for selection customization,
+- gesture attached events moved off the public `Gestures` class and are exposed directly on `InputElement`,
+- `AccessText.AccessKey` changed from `char` to `string?`.
 
 Migration rule:
 
-- if your app code assumed `TopLevel` was every root service, re-check those assumptions,
-- prefer `TopLevel.GetTopLevel(control)` plus public APIs like `StorageProvider`, `Clipboard`, `Screens`, and `Launcher`,
-- for visual-root inspection, use `IPresentationSource` and `GetPresentationSource()` when appropriate.
+- move item-selection interception closer to the item container,
+- remove the `Gestures.` prefix in XAML,
+- update any code that reads `AccessText.AccessKey`.
 
-### 10. Android bootstrap changed
+### 7. Several small but real type-shape changes now surface in app code
 
-The old generic `AvaloniaMainActivity<TApp>` path is gone.
+The official docs page also calls out these practical breaks:
 
-Migration rule:
+- `FuncMultiValueConverter` now takes `IReadOnlyList<TIn>`,
+- `Screen` is abstract; do not construct it directly,
+- `ResourcesChangedEventArgs` is now a struct; use `ResourcesChangedEventArgs.Create()` if you must create one,
+- text-formatting constructors moved `FontFeatureCollection` to the trailing optional position.
 
-- create an Android `Application` subclass that inherits `AvaloniaAndroidApplication<TApp>`,
-- use a plain `AvaloniaMainActivity`,
-- prefer `IActivityApplicationLifetime.MainViewFactory` on Android over assigning `ISingleViewApplicationLifetime.MainView`.
+### 8. Platform and package removals are real migration work, not footnotes
 
-### 11. Focus events and focus-management contracts changed
+Treat these as first-pass fixes if your codebase touches them:
 
-This is one of the most important late-cycle app-facing changes.
-
-What changed:
-
-- `GotFocusEventArgs` is no longer the public focus event type,
-- `InputElement.GotFocus` and `InputElement.LostFocus` now both use `FocusChangedEventArgs`,
-- `FocusChangedEventArgs` adds `OldFocusedElement`, `NewFocusedElement`, `NavigationMethod`, and `KeyModifiers`,
-- `InputElement.OnGotFocus(...)` and `InputElement.OnLostFocus(...)` now take `FocusChangedEventArgs`,
-- `IFocusManager` is now a real focus/navigation service with `Focus(...)`, `TryMoveFocus(...)`, `FindFirstFocusableElement()`, `FindLastFocusableElement()`, and `FindNextElement(...)`; old `ClearFocus()` assumptions no longer hold.
-
-Migration rule:
-
-- update handler types, override signatures, and any routed-event assertions in tests,
-- if you used `IFocusManager.ClearFocus()`, rework toward explicit focus transfer instead of treating "no focus" as the normal end state,
-- if you relied on only `NavigationMethod` from `GotFocusEventArgs`, move to `FocusChangedEventArgs` and use the richer context instead.
-
-### 12. Swipe gesture APIs changed shape
-
-This is another late-cycle RC1 break that affects touch-first shells, carousels, and custom paging surfaces.
-
-What changed:
-
-- `SwipeGestureRecognizer` now uses `CanHorizontallySwipe`, `CanVerticallySwipe`, and `IsMouseEnabled`,
-- `CrossAxisCancelThreshold` and `EdgeSize` were removed from the public surface,
-- `Threshold=0` now means "resolve from platform tap size" instead of the old hard-coded threshold semantics,
-- `SwipeGestureEventArgs` now carries incremental `Delta` plus `Velocity`,
-- `SwipeGestureEventArgs.StartPoint` is gone,
-- `SwipeGestureEndedEventArgs` was added for end-of-gesture handling.
-
-Migration rule:
-
-- update recognizer configuration first,
-- then update any event handler logic that assumed a one-shot swipe with a fixed `StartPoint`,
-- if you need full gesture displacement, accumulate `Delta` yourself until `SwipeGestureEnded`.
-
-## RC1 Delta If You Already Started from Preview2
-
-If your codebase already moved to `12.0.0-preview2`, these are the RC1-specific follow-ups to audit before you call the migration complete:
-
-### 1. `DrawerPage.DrawerBreakpointWidth` became `DrawerBreakpointLength`
-
-This is not only a rename. RC1 generalizes the breakpoint to the current drawer axis instead of width-only semantics.
-
-Migration rule:
-
-- rename `DrawerBreakpointWidth` to `DrawerBreakpointLength`,
-- re-test drawers that can switch between horizontal and vertical placement because the measured axis can now change with placement.
-
-### 2. Page lifecycle timing moved after transitions complete
-
-The `12.0.0-rc1` release notes call out a navigation behavioral change: page lifecycle events now fire after transitions finish instead of before.
-
-Migration rule:
-
-- re-check any code that assumed a page was fully current before animation completed,
-- re-run navigation tests that mutate state, start data loads, or focus controls from page lifecycle hooks.
-
-### 3. `PipsPager` shipped after preview2
-
-If you built custom pager dots or selection indicators while on preview2, re-evaluate them against the new built-in `PipsPager` surface and automation peer.
-
-Migration rule:
-
-- prefer `PipsPager` when you need explicit page indicators,
-- keep custom pager implementations only when you need a different interaction model or very specific visuals.
+- `Avalonia.Direct2D1` is gone; use Skia,
+- implicit `BinaryFormatter` clipboard serialization on Windows is gone,
+- `Avalonia.Browser.Blazor` is gone; use `Avalonia.Browser` and `AvaloniaView`,
+- `Avalonia.Tizen` is gone from the main repository line.
 
 ## Behavior Changes to Re-verify
 
-These are not just compile fixes. They need runtime checks.
+These are runtime checks, not just compile fixes.
 
-- compiled bindings defaulting to `true` can change which bindings fail at build time versus runtime.
-- custom title bars and non-client hit testing need explicit verification after the `WindowDecorations` rename, role-based chrome changes, and RC1 drawn-decoration cleanup.
-- drag/drop, clipboard, and picker flows need end-to-end tests after the data-transfer and storage-provider shifts.
-- form validation needs smoke tests if your app depended on data annotations.
-- focus visuals, tab loops, and keyboard escape hatches need re-testing after the `FocusChangedEventArgs` and `IFocusManager` contract changes.
-- swipe, carousel, drawer, and page-navigation interactions need re-testing after the swipe recognizer/event changes.
-- page lifecycle ordering needs re-checking if preview2 code depended on events firing before transitions completed.
-- Android activity recreation needs device testing after the new application-driven bootstrap and `MainViewFactory` pattern.
+- compiled bindings are now the default, so some failures move from runtime to build time,
+- touch and pen selection/focus now complete on release rather than press,
+- `Dispatcher.InvokeAsync(...)` now captures execution context,
+- library and control code should prefer `AvaloniaObject.Dispatcher` or `Dispatcher.CurrentDispatcher` for multi-dispatcher awareness,
+- window-margin and maximized-client-area workarounds on Windows should be re-tested because `ExtendClientAreaToDecorationsHint` behavior was fixed,
+- access keys now trigger from the printed symbol, not the old virtual-key interpretation,
+- old Type 1 fonts (`.pfb` / `.pfm`) are no longer supported,
+- custom controls that used `enableDataValidation: true` should be re-tested because validation now flows automatically.
 
 Recommended verification passes:
 
-- build debug and release,
-- run XAML compile with source info enabled,
-- exercise window chrome, dialogs, drag/drop, clipboard, validation, navigation, focus, and gesture flows,
-- rerun headless/UI tests if your suite covers bindings or overlay behavior.
+- build Debug and Release,
+- rebuild XAML with source info enabled,
+- exercise window chrome, dialogs, drag/drop, clipboard, validation, focus, gesture, and access-key flows,
+- re-run mobile startup paths and headless test projects,
+- re-test old Windows client-area workarounds and remove the ones Avalonia 12 fixed.
 
-## Major New APIs in Avalonia 12
+## Platform-Specific Migration Notes
 
-Avalonia 12 is not just cleanup. It adds substantial new surface area.
+### Windows
 
-### Navigation and page stack
+- replace `Avalonia.Direct2D1` with `Avalonia.Skia`,
+- remove any assumption that arbitrary objects round-trip through the clipboard via `BinaryFormatter`,
+- remove old `ExtendClientAreaToDecorationsHint` workaround margins and title-bar hacks before re-adding anything.
 
-New page/navigation APIs include:
+### Android
 
-- `Page`
-- `ContentPage`
-- `DrawerPage`
-- `NavigationPage`
-- `TabbedPage`
-- `CarouselPage`
-- navigation event args and page transitions
+The docs page now expects this bootstrap shape:
 
-Use this lane when you need app-shell navigation that is more structured than ad-hoc `ContentControl` swapping.
+- `MainActivity` inherits plain `AvaloniaMainActivity`,
+- add an `[Application]` type deriving from `AvaloniaAndroidApplication<TApp>`,
+- prefer `IActivityApplicationLifetime.MainViewFactory`,
+- stop overriding `CreateAppBuilder()` and `CustomizeAppBuilder(...)` on `AvaloniaMainActivity`.
 
-### Command bar family
+### iOS
 
-Avalonia 12 adds:
+- scene-based app startup is now the expected model,
+- `AvaloniaAppDelegate.Window` stays `null` after initialization,
+- if you need the native `UIWindow`, detect it from `AvaloniaView.MovedToWindow`.
 
-- `CommandBar`
-- `AppBarButton`
-- `AppBarToggleButton`
-- `AppBarSeparator`
-- `ICommandBarElement`
+### Browser and Tizen
 
-These are useful when migrating WinUI-style top command surfaces or mobile/tablet page command bars.
+- move off `Avalonia.Browser.Blazor`,
+- treat Tizen support as out-of-tree for Avalonia 12.
 
-### Pager and selection indicators
+### Headless
 
-Avalonia 12 RC1 adds:
+Avalonia 12 updates the supported unit-test baselines:
 
-- `PipsPager`
-- `PipsPagerSelectedIndexChangedEventArgs`
-- `PipsPagerTemplateSettings`
+- xUnit support now targets version `3`,
+- NUnit support now targets version `4`.
 
-Use this when you need explicit page indicators without building a custom dot-strip control.
+## Additional Source-Backed Deltas Worth Keeping
 
-### Code-first compiled bindings
+The official docs page is now the primary migration source, but the repository's source-backed RC1 scan still exposes several app-facing deltas worth keeping in this guide because they affect real migrations.
 
-New API:
+### Focus event and focus-manager changes
 
-- `CompiledBinding.Create<TIn, TOut>(...)`
+The generated `11.3.12 -> 12.0.0-rc1` diff still surfaces important focus changes:
 
-Use it when you need a typed, code-only binding path without falling back to reflection.
+- `GotFocusEventArgs` is replaced by `FocusChangedEventArgs` on `GotFocus` / `LostFocus`,
+- `FocusChangedEventArgs` carries `OldFocusedElement`, `NewFocusedElement`, `NavigationMethod`, and `KeyModifiers`,
+- `IFocusManager.ClearFocus()` assumptions no longer hold; move toward explicit focus transfer.
 
-### Dispatcher ownership helpers
+### Swipe recognizer changes
 
-New helpers include:
+Still relevant for touch-first shells and custom paging surfaces:
 
-- `Dispatcher.CurrentDispatcher`
-- `Dispatcher.FromThread(Thread)`
-- `AvaloniaObject.Dispatcher`
+- `SwipeGestureRecognizer` now uses `CanHorizontallySwipe`, `CanVerticallySwipe`, and `IsMouseEnabled`,
+- `CrossAxisCancelThreshold` and `EdgeSize` are gone,
+- `SwipeGestureEventArgs` now exposes incremental `Delta` plus `Velocity`,
+- `SwipeGestureEndedEventArgs` was added.
 
-These are especially useful in long-lived services, custom visuals, and cross-thread coordination code.
+### Preview2 -> RC1 deltas still worth checking in real codebases
 
-### Text rendering split
+These are not from the official docs page, but they still matter if your code moved early:
 
-Avalonia 12 adds:
-
-- `TextOptions`
-- `BaselinePixelAlignment`
-
-The old `RenderOptions.TextRenderingMode` path is obsolete; prefer the new `TextOptions` attached properties and drawing-context push methods.
-
-### Modern chrome and popup infrastructure
-
-New or expanded APIs include:
-
-- `WindowDrawnDecorations`
-- `WindowDrawnDecorationsContent`
-- `WindowDecorationProperties`
-- `WindowDecorationsElementRole`
-- `PopupOverlayLayer`
-- `IPresentationSource`
-
-Use these when you need more precise client-area chrome, overlay placement, or visual-root hosting behavior.
-
-### Focus and gesture additions
-
-New input additions include:
-
-- `FocusChangedEventArgs`
-- `FindNextElementOptions`
-- `SwipeGestureRecognizer`
-- `SwipeGestureEventArgs`
-- `SwipeGestureEndedEventArgs`
-
-These help when migrating touch-first shells, keyboard-navigation workflows, and directional gesture behaviors.
-
-## Migration Workflow
-
-1. Move the project baseline first.
-- update target frameworks, Android minimums, and any designer/CI expectations.
-
-2. Fix namespace and constructor breaks.
-- binding types, metadata attributes, dialog types, and data-transfer APIs should be corrected before UI polish work.
-
-3. Make bindings explicit.
-- add `x:DataType`, fix compiled-binding errors, and isolate true reflection cases.
-
-4. Migrate platform services.
-- convert dialogs to `StorageProvider`, drag/drop and clipboard to `IDataTransfer`, and Android bootstrap to `AvaloniaAndroidApplication<TApp>`.
-
-5. Update focus and gesture code.
-- move `GotFocus`/`LostFocus` handlers and overrides to `FocusChangedEventArgs`,
-- update `SwipeGestureRecognizer` configuration and any gesture-state code.
-
-6. Re-test window chrome, overlays, and page behavior.
-- especially if you extend client area, host popups manually, or rely on custom title bars.
-- if you came from preview2, re-test `DrawerPage` breakpoints and page lifecycle timing.
-
-7. Adopt new APIs only after parity.
-- page navigation, command bars, `PipsPager`, `CompiledBinding.Create`, and `TextOptions` are good phase-two upgrades once the app is stable on RC1.
+- `DrawerBreakpointWidth` became `DrawerBreakpointLength`,
+- page lifecycle hooks now run after transitions complete,
+- `PipsPager` landed after the preview2 baseline used by the earlier lane.
 
 ## Code Migration Examples
+
+### Target framework, developer tools, and text shaping
+
+Before:
+
+```xml
+<PropertyGroup>
+  <TargetFramework>netstandard2.0</TargetFramework>
+</PropertyGroup>
+
+<ItemGroup>
+  <PackageReference Include="Avalonia.Diagnostics" Version="11.3.12" />
+</ItemGroup>
+```
+
+```csharp
+public static AppBuilder BuildAvaloniaApp()
+    => AppBuilder.Configure<App>()
+        .UseSkia();
+```
+
+After:
+
+```xml
+<PropertyGroup>
+  <TargetFramework>net10.0</TargetFramework>
+</PropertyGroup>
+
+<ItemGroup>
+  <PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.0" />
+  <PackageReference Include="Avalonia.HarfBuzz" Version="12.0.0-rc1" />
+</ItemGroup>
+```
+
+```csharp
+public static AppBuilder BuildAvaloniaApp()
+    => AppBuilder.Configure<App>()
+        .UseSkia()
+        .UseHarfBuzz();
+```
+
+Use `AttachDeveloperTools()` on the Avalonia 12 line.
 
 ### Binding constructor migration
 
@@ -418,117 +380,30 @@ var titleBinding = new ReflectionBinding("WindowTitle")
 var dirtyBinding = CompiledBinding.Create<EditorViewModel, bool>(vm => vm.IsDirty);
 ```
 
-### XAML binding migration with compiled bindings enabled by default
-
-Before:
-
-```xaml
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-  <TextBlock Text="{Binding DisplayName}" />
-</UserControl>
-```
-
-After:
-
-```xaml
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:vm="using:MyApp.ViewModels"
-             x:DataType="vm:CustomerViewModel">
-  <StackPanel Spacing="8">
-    <TextBlock Text="{CompiledBinding DisplayName}" />
-    <TextBlock Text="{ReflectionBinding LegacyDynamicValue}" />
-  </StackPanel>
-</UserControl>
-```
-
-### Focus event migration
+### Clipboard migration
 
 Before:
 
 ```csharp
-using Avalonia.Input;
-using Avalonia.Interactivity;
+var data = new DataObject();
+data.Set(DataFormats.Text, "some text");
 
-private void SearchBox_GotFocus(object? sender, GotFocusEventArgs e)
-{
-    _lastNavigationMethod = e.NavigationMethod;
-}
-
-protected override void OnLostFocus(RoutedEventArgs e)
-{
-    base.OnLostFocus(e);
-    _isFocused = false;
-}
+await clipboard.SetDataObjectAsync(data);
+var text = await clipboard.GetTextAsync();
 ```
 
 After:
 
 ```csharp
-using Avalonia.Input;
+var item = new DataTransferItem();
+item.Set(DataFormat.Text, "some text");
 
-private void SearchBox_GotFocus(object? sender, FocusChangedEventArgs e)
-{
-    _lastNavigationMethod = e.NavigationMethod;
-    _previouslyFocused = e.OldFocusedElement;
-}
+var data = new DataTransfer();
+data.Add(item);
 
-protected override void OnLostFocus(FocusChangedEventArgs e)
-{
-    base.OnLostFocus(e);
-    _isFocused = false;
-}
+await clipboard.SetDataAsync(data);
+var text = await clipboard.TryGetTextAsync();
 ```
-
-### `SystemDecorations` to `WindowDecorations`
-
-Before:
-
-```xaml
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        SystemDecorations="None"
-        ExtendClientAreaToDecorationsHint="True">
-  <Grid />
-</Window>
-```
-
-After:
-
-```xaml
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:chrome="clr-namespace:Avalonia.Controls.Chrome;assembly=Avalonia.Controls"
-        WindowDecorations="None"
-        ExtendClientAreaToDecorationsHint="True">
-  <Grid>
-    <Button chrome:WindowDecorationProperties.ElementRole="CloseButton"
-            HorizontalAlignment="Right"
-            Content="Close" />
-  </Grid>
-</Window>
-```
-
-### `PseudolassesExtensions` to `PseudoClassesExtensions`
-
-Before:
-
-```csharp
-using static Avalonia.Controls.PseudolassesExtensions;
-
-Set(control.PseudoClasses, ":busy", viewModel.IsBusy);
-```
-
-After:
-
-```csharp
-using static Avalonia.Controls.PseudoClassesExtensions;
-
-Set(control.PseudoClasses, ":busy", viewModel.IsBusy);
-```
-
-If you never referenced the static class name directly and only called `control.PseudoClasses.Set(...)`, this rename may already be covered by extension-method resolution.
 
 ### `OpenFileDialog` to `StorageProvider`
 
@@ -563,23 +438,49 @@ var files = await topLevel.StorageProvider.OpenFilePickerAsync(
     });
 ```
 
-### `DrawerBreakpointWidth` to `DrawerBreakpointLength` (preview2 to RC1)
+### Window chrome migration
 
 Before:
 
 ```xaml
-<DrawerPage xmlns="https://github.com/avaloniaui"
-            DrawerBreakpointWidth="960" />
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        SystemDecorations="None"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaToDecorationsHint="True">
+  <Grid />
+</Window>
 ```
 
 After:
 
 ```xaml
-<DrawerPage xmlns="https://github.com/avaloniaui"
-            DrawerBreakpointLength="960" />
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:chrome="clr-namespace:Avalonia.Controls.Chrome;assembly=Avalonia.Controls"
+        WindowDecorations="None"
+        ExtendClientAreaToDecorationsHint="True">
+  <Grid>
+    <Button chrome:WindowDecorationProperties.ElementRole="CloseButton"
+            HorizontalAlignment="Right"
+            Content="Close" />
+  </Grid>
+</Window>
 ```
 
-`DrawerBreakpointLength` follows the current drawer axis, so re-check layouts that can switch placement.
+### Gesture event migration
+
+Before:
+
+```xaml
+<Button Gestures.Pinch="Button_Pinch" />
+```
+
+After:
+
+```xaml
+<Button Pinch="Button_Pinch" />
+```
 
 ### Android bootstrap migration
 
@@ -592,13 +493,13 @@ public class MainActivity : AvaloniaMainActivity<App>
 }
 ```
 
-After (`12.0.0-rc1`):
+After (Avalonia 12 line):
 
 ```csharp
 [Application]
-public class Application : AvaloniaAndroidApplication<App>
+public class AndroidApp : AvaloniaAndroidApplication<App>
 {
-    protected Application(nint javaReference, JniHandleOwnership transfer)
+    protected AndroidApp(nint javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
     {
     }
@@ -619,54 +520,61 @@ if (ApplicationLifetime is IActivityApplicationLifetime activityLifetime)
 }
 ```
 
-## AOT and Trimming Notes
+## AOT, Trimming, and Build Notes
 
-- Avalonia 12's default compiled-binding mode is generally better for trimming than reflection-heavy `Binding` usage.
-- `ReflectionBinding` still carries trimming and dynamic-code caveats; keep it explicit and local.
-- `AppBuilder.WithDataAnnotationsValidation()` is annotated for trim risk because it relies on runtime property access.
-- `CompiledBinding.Create(...)` is the preferred code-only path when you need a typed binding in AOT-conscious code.
+- Avalonia 12's compiled-binding default is generally better for trimming than reflection-heavy binding usage.
+- keep `ReflectionBinding` explicit and local,
+- `AppBuilder.WithDataAnnotationsValidation()` is still a reflection-heavy opt-in,
+- `CompiledBinding.Create(...)` is the preferred code-only binding path for AOT-conscious code,
+- remove old developer-tools assumptions tied to `Avalonia.Diagnostics`.
 
 ## Troubleshooting
 
 1. Build suddenly fails on views that worked in `11.3.12`.
 - Add `x:DataType`, switch to `{CompiledBinding ...}`, or explicitly opt a binding into `{ReflectionBinding ...}`.
 
-2. Focus handlers or overrides no longer compile.
-- Move `GotFocus` and `LostFocus` handlers to `FocusChangedEventArgs`, and update `OnGotFocus(...)` / `OnLostFocus(...)` overrides to the same event-arg type.
+2. `AttachDevTools()` or `Avalonia.Diagnostics` no longer resolves.
+- Move to `AvaloniaUI.DiagnosticsSupport` and `AttachDeveloperTools()`.
 
-3. Validation attributes stopped showing UI errors.
-- Re-enable data annotations validation in `BuildAvaloniaApp()` with `WithDataAnnotationsValidation()`.
+3. Startup throws `No text shaping system configured`.
+- If you explicitly call `.UseSkia()`, add `.UseHarfBuzz()` and reference `Avalonia.HarfBuzz`.
 
-4. File picker code no longer compiles.
-- Move to `TopLevel.StorageProvider` and the `FilePicker*Options` types.
+4. Clipboard or drag/drop code no longer compiles.
+- Replace `IDataObject`/`DataObject` usage with `IDataTransfer` / `IAsyncDataTransfer` / `DataTransfer`.
 
-5. Swipe code no longer compiles or behaves like the old one-shot gesture.
-- Update `SwipeGestureRecognizer` properties, stop relying on `StartPoint`, and use `SwipeGestureEnded` when you need end-of-gesture behavior.
+5. Touch selection, gesture handling, or item interception behaves differently.
+- Re-check selection-on-release behavior and remove the old `Gestures.` prefix in XAML.
 
-6. Android app starts but the Avalonia view is missing.
-- Check that the project now has an `[Application]` type inheriting `AvaloniaAndroidApplication<TApp>` and that `MainActivity` inherits plain `AvaloniaMainActivity`.
+6. Custom title bar hit testing broke after the upgrade.
+- Rename `SystemDecorations` to `WindowDecorations`, stop relying on `ExtendClientAreaChromeHints`, and use `WindowDecorationProperties.ElementRole`.
 
-7. `DrawerPage` breakpoints do not behave the same after moving from preview2 to RC1.
-- Rename `DrawerBreakpointWidth` to `DrawerBreakpointLength` and verify both horizontal and vertical drawer placements.
+7. Android app starts but the Avalonia view is missing.
+- Confirm the project now has an `[Application]` type inheriting `AvaloniaAndroidApplication<TApp>` and that `MainActivity` inherits plain `AvaloniaMainActivity`.
 
-8. Custom title bar hit testing broke after the rename.
-- Rename `SystemDecorations` to `WindowDecorations` and assign `WindowDecorationProperties.ElementRole` to chrome visuals that must behave like non-client controls.
+8. Headless test projects stopped restoring or running.
+- Move test packages and adapters to xUnit `3` / NUnit `4` compatible versions.
 
 ## Full Reference Pointers
 
-- curated migration lane: this file
-- exhaustive break and new API catalog: [`69-avalonia-12-breaking-changes-and-new-api-catalog.md`](69-avalonia-12-breaking-changes-and-new-api-catalog)
-- exhaustive Avalonia 12 RC1 API index: [`api-index-12.0.0-rc1-generated.md`](api-index-12.0.0-rc1-generated)
+- curated migration lane: this file,
+- source-backed break and new API catalog for the latest published Avalonia 12 tag: [`69-avalonia-12-breaking-changes-and-new-api-catalog.md`](69-avalonia-12-breaking-changes-and-new-api-catalog),
+- source-backed Avalonia 12 API index for the latest published Avalonia 12 tag: [`api-index-12.0.0-rc1-generated.md`](api-index-12.0.0-rc1-generated),
 - official upstream references:
-  - [Avalonia release: 12.0.0-rc1](https://github.com/AvaloniaUI/Avalonia/releases/tag/12.0.0-rc1)
-  - [Avalonia wiki: v12 Breaking Changes](https://github.com/AvaloniaUI/Avalonia/wiki/v12-Breaking-Changes)
-  - [Avalonia wiki: Breaking Changes](https://github.com/AvaloniaUI/Avalonia/wiki/Breaking-Changes)
+  - [Breaking changes in Avalonia 12](https://docs.avaloniaui.net/docs/avalonia12-breaking-changes),
+  - [Avalonia release: 12.0.0-rc1](https://github.com/AvaloniaUI/Avalonia/releases/tag/12.0.0-rc1),
+  - [Avalonia wiki: v12 Breaking Changes](https://github.com/AvaloniaUI/Avalonia/wiki/v12-Breaking-Changes),
+  - [Avalonia wiki: Breaking Changes](https://github.com/AvaloniaUI/Avalonia/wiki/Breaking-Changes),
 - stable binding/build references:
-  - [`02-bindings-xaml-aot.md`](02-bindings-xaml-aot)
-  - [`41-xaml-compiler-and-build-pipeline.md`](41-xaml-compiler-and-build-pipeline)
+  - [`02-bindings-xaml-aot.md`](02-bindings-xaml-aot),
+  - [`41-xaml-compiler-and-build-pipeline.md`](41-xaml-compiler-and-build-pipeline),
 - stable platform-service references:
-  - [`29-storage-provider-and-file-pickers.md`](29-storage-provider-and-file-pickers)
-  - [`31-clipboard-and-data-transfer.md`](31-clipboard-and-data-transfer)
-- stable windowing and chrome references:
-  - [`13-windowing-and-custom-decorations.md`](13-windowing-and-custom-decorations)
-  - [`48-toplevel-window-and-runtime-services.md`](48-toplevel-window-and-runtime-services)
+  - [`29-storage-provider-and-file-pickers.md`](29-storage-provider-and-file-pickers),
+  - [`31-clipboard-and-data-transfer.md`](31-clipboard-and-data-transfer),
+- stable windowing/runtime references:
+  - [`13-windowing-and-custom-decorations.md`](13-windowing-and-custom-decorations),
+  - [`48-toplevel-window-and-runtime-services.md`](48-toplevel-window-and-runtime-services),
+- stable diagnostics/testing/input references:
+  - [`18-input-system-and-routed-events.md`](18-input-system-and-routed-events),
+  - [`26-testing-stack-headless-render-and-ui-tests.md`](26-testing-stack-headless-render-and-ui-tests),
+  - [`27-diagnostics-profiling-and-devtools.md`](27-diagnostics-profiling-and-devtools),
+  - [`47-dispatcher-priority-operations-and-timers.md`](47-dispatcher-priority-operations-and-timers)

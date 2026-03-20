@@ -16,6 +16,9 @@ public static AppBuilder BuildAvaloniaApp()
 - Skia rendering
 - HarfBuzz text shaping through the Skia stack
 
+Avalonia 12 migration note:
+- if you explicitly switch to `.UseSkia()` instead of using `.UsePlatformDetect()`, add `.UseHarfBuzz()` and reference `Avalonia.HarfBuzz`; see [`68-avalonia-12-migration-guide.md`](68-avalonia-12-migration-guide).
+
 Skia tuning option exposed by runtime configuration:
 
 - `SkiaOptions.UseOpacitySaveLayer`
